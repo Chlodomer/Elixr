@@ -2,33 +2,68 @@
 
 An interactive web application that visualizes hair whitening progression over time and demonstrates the impact of Elixr's treatment.
 
-## Quick Start
+## 🔗 Live Demo
 
-1. Open `index.html` in a web browser
-2. Select your ethnicity and hair type
-3. Adjust age and lifestyle parameters
-4. Toggle Elixr usage to see the difference
+**[View Live Demo](https://chlodomer.github.io/Elixr/)**
 
-## Features
+## ✨ Quick Start
 
+### Online
+Simply visit the [live demo](https://chlodomer.github.io/Elixr/)
+
+### Local Development
+1. Clone this repository: `git clone https://github.com/Chlodomer/Elixr.git`
+2. Open `index.html` in a web browser
+3. Select your ethnicity and hair type
+4. Adjust age and lifestyle parameters
+5. Toggle Elixr usage to see the difference
+
+## 🎯 Features
+
+### Core Functionality
 - **3 Ethnicity Options**: Caucasian, African American, Middle Eastern/Asian
 - **4 Hair Types**: Straight Short, Straight Long, Curly Short, Curly Long
 - **Multiple Views**: Front, Top, and Back views of the head
 - **Interactive Parameters**:
-  - Age slider (20-80 years)
-  - Stress level
-  - Sun exposure
-  - Work environment
+  - Age slider (20-80 years) with real-time updates
+  - Stress level (0-100% continuous slider)
+  - Sun exposure (0-100% continuous slider)
+  - Work environment (Indoor/Office, Outdoor, Chemical Exposure)
   - Smoking status
   - Hair dyeing status
-- **Elixr Comparison**: See results with and without Elixr treatment
+- **Elixr Comparison**: Side-by-side comparison with and without Elixr treatment
 - **Real-time Updates**: Calculations update instantly as you adjust parameters
 
-## Technology Stack
+### Design Features
+- **Luxury Aesthetic**: Sophisticated grayscale design with subtle blue accents
+- **Smooth Transitions**: Fade-in/fade-out animations between screens (500ms)
+- **Rounded Corners**: Consistent 6-12px border radius throughout
+- **Elegant Icons**:
+  - Circular monogram letters for ethnicity selection (C, A, M)
+  - Minimalist line art for hair types with hover animations
+- **Interactive Elements**:
+  - Custom work environment button group
+  - Rounded square slider toggles (3px border-radius)
+  - Blue glow hover effects on all interactive elements
+- **Onboarding Flow**: Educational screen explaining the simulator's features
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-- Pure HTML5, CSS3, and JavaScript (no frameworks required)
-- Static site compatible with GitHub Pages
-- Responsive design for mobile and desktop
+## 💻 Technology Stack
+
+- **Frontend**: Pure HTML5, CSS3, and Vanilla JavaScript
+- **No Dependencies**: Zero frameworks, zero build process
+- **Static Site**: GitHub Pages compatible
+- **Responsive Design**: Mobile and desktop optimized
+- **Browser Compatibility**: Modern browsers (Chrome, Firefox, Safari, Edge)
+
+## 📚 Documentation
+
+- **[PRD.md](PRD.md)** - Complete Product Requirements Document
+- **[CHANGES.md](CHANGES.md)** - Initial design and functionality changes
+- **[DESIGN_UPDATES.md](DESIGN_UPDATES.md)** - Luxury aesthetic refinements
+- **[ICON_UPDATES.md](ICON_UPDATES.md)** - Custom icon design details
+- **[IMAGE_GUIDE.md](IMAGE_GUIDE.md)** - Comprehensive image creation guide
+- **[QUICK_START.md](QUICK_START.md)** - Quick deployment guide
 
 ## Image Requirements
 
@@ -105,24 +140,33 @@ Currently, if images are missing, the app will show SVG placeholders with:
 
 This allows the app to function without images for development/testing.
 
-## Deployment to GitHub Pages
+## 🚀 Deployment to GitHub Pages
 
-1. Create a new repository on GitHub
-2. Push all files to the repository:
+This repository is already deployed to GitHub Pages at: **https://chlodomer.github.io/Elixr/**
+
+### To Update the Live Site
+
+1. Make your changes locally
+2. Commit and push to the main branch:
    ```bash
-   git init
    git add .
-   git commit -m "Initial commit: Elixr Hair Whitening Simulator"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git push -u origin main
+   git commit -m "Your descriptive commit message"
+   git push origin main
    ```
-3. Enable GitHub Pages:
-   - Go to repository Settings
-   - Scroll to "Pages" section
-   - Select "main" branch and "/ (root)" folder
-   - Save
-4. Your site will be live at: `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+3. GitHub Pages will automatically update within 1-2 minutes
+
+### GitHub Pages Configuration
+
+- **Source**: `main` branch, `/ (root)` folder
+- **Build**: Automatic (no build process required - static site)
+- **Custom Domain**: Can be configured in repository Settings > Pages
+
+### To Deploy Your Own Fork
+
+1. Fork this repository
+2. Go to your fork's Settings > Pages
+3. Select "main" branch and "/ (root)" folder
+4. Save - your site will be live at `https://YOUR_USERNAME.github.io/Elixr/`
 
 ## Customization
 
