@@ -169,8 +169,46 @@ const app = {
         });
         document.querySelector(`[data-view="${view}"]`).classList.add('active');
 
-        // Update avatar image
-        this.updateAvatarImage();
+        // Toggle between static and rotation views
+        const staticView = document.getElementById('static-view');
+        const rotationView = document.getElementById('rotation-view');
+
+        if (view === 'rotate') {
+            // Show rotation view
+            staticView.style.display = 'none';
+            rotationView.style.display = 'block';
+
+            // Initialize rotation if not already initialized
+            if (!HeadRotation.elements.container) {
+                HeadRotation.init('rotation-container');
+            } else {
+                HeadRotation.updateImage();
+            }
+
+            // Preload rotation images
+            if (ROTATION_CONFIG.preloadImages && window.ImagePreloader) {
+                const params = {
+                    ethnicity: this.state.ethnicity,
+                    age: this.state.age,
+                    ...this.state.parameters
+                };
+                const result = Calculator.calculateGrayPercentage(params);
+                const displayPercent = this.state.usingElixr ? result.withElixr : result.withoutElixr;
+
+                ImagePreloader.preloadCurrentSet(
+                    this.state.ethnicity,
+                    this.state.hairType,
+                    displayPercent
+                );
+            }
+        } else {
+            // Show static view
+            staticView.style.display = 'block';
+            rotationView.style.display = 'none';
+
+            // Update avatar image for static views
+            this.updateAvatarImage();
+        }
     },
 
     /**
@@ -190,8 +228,16 @@ const app = {
         document.getElementById('gray-without').textContent = `${result.withoutElixr}%`;
         document.getElementById('gray-with').textContent = `${result.withElixr}%`;
 
-        // Update avatar image based on current usage
-        this.updateAvatarImage();
+        // Update avatar image based on current view
+        if (this.state.currentView === 'rotate') {
+            // Update rotation view
+            if (window.HeadRotation && HeadRotation.elements.container) {
+                HeadRotation.updateImage();
+            }
+        } else {
+            // Update static view
+            this.updateAvatarImage();
+        }
     },
 
     /**

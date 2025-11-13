@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+    <!-- Background -->
+    <rect width="600" height="600" fill="#e2e8f0"/>
+
+    <!-- Rotation circle guide -->
+    <circle cx="300" cy="300" r="180" fill="none" stroke="#cbd5e0" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- Center circle (head) -->
+    <circle cx="300" cy="300" r="120" fill="#f0f0f0" stroke="#3a4a5a" stroke-width="3"/>
+
+    <!-- Direction arrow -->
+    <line x1="300" y1="300" x2="300" y2="480" stroke="#3a4a5a" stroke-width="4"/>
+    <circle cx="300" cy="480" r="10" fill="#3a4a5a"/>
+
+    <!-- Angle display (top) -->
+    <text x="300" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#2d3748" font-weight="bold">
+        90°
+    </text>
+
+    <!-- Gray level (center) -->
+    <text x="300" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" fill="#4a5568" font-weight="bold">
+        75%
+    </text>
+    <text x="300" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#718096">
+        Gray
+    </text>
+
+    <!-- Details (bottom) -->
+    <text x="300" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#4a5568">
+        C · SL · F
+    </text>
+    <text x="300" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#718096">
+        caucasian
+    </text>
+    <text x="300" y="550" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#718096">
+        straight-long - female
+    </text>
+
+    <!-- Placeholder label -->
+    <text x="300" y="580" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#a0aec0" font-style="italic">
+        Placeholder Image
+    </text>
+</svg>

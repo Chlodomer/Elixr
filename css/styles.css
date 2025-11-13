@@ -844,3 +844,179 @@ h3:first-child {
         font-size: 1.25rem;
     }
 }
+
+/* ===========================
+   ROTATION VIEW STYLES
+   =========================== */
+
+/* Rotation Container */
+.rotation-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(70, 130, 180, 0.05);
+    user-select: none;
+}
+
+#rotation-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Rotation Overlay (angle display) */
+.rotation-overlay {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    border: 1px solid rgba(106, 122, 138, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(70, 130, 180, 0.1);
+    pointer-events: none;
+}
+
+#rotation-angle-display {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #e0e0e0;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Rotation Instructions */
+.rotation-instructions {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(106, 122, 138, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(70, 130, 180, 0.1);
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.rotation-container:hover .rotation-instructions {
+    opacity: 0.4;
+}
+
+.rotation-instructions svg {
+    color: #6a7a8a;
+}
+
+.rotation-instructions span {
+    font-size: 0.875rem;
+    color: #b0b0b0;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Gender Toggle */
+.gender-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(42, 58, 74, 0.2) 0%, rgba(26, 26, 26, 0.2) 100%);
+    border-radius: 8px;
+    border: 1px solid rgba(106, 122, 138, 0.15);
+}
+
+.gender-label {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #b0b0b0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.gender-toggle .toggle-buttons {
+    margin-bottom: 0;
+}
+
+/* Preload Progress */
+.preload-progress {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(26, 26, 26, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(106, 122, 138, 0.15);
+}
+
+.preload-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(58, 74, 90, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.preload-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3a4a5a 0%, #6a7a8a 100%);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.4);
+}
+
+.preload-progress-text {
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #a0a0a0;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive for rotation view */
+@media (max-width: 640px) {
+    .rotation-overlay {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    #rotation-angle-display {
+        font-size: 1rem;
+    }
+
+    .rotation-instructions {
+        bottom: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+
+    .rotation-instructions svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .gender-toggle {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}

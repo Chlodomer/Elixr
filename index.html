@@ -134,11 +134,59 @@
                         <button class="view-tab" data-view="back" onclick="app.switchView('back')">
                             Back
                         </button>
+                        <button class="view-tab" data-view="rotate" onclick="app.switchView('rotate')">
+                            360° Rotate
+                        </button>
                     </div>
-                    <div class="avatar-display">
+                    <div class="avatar-display" id="static-view">
                         <img id="avatar-image" src="" alt="Avatar">
                         <div class="avatar-overlay">
                             <span id="current-age-display">Age: 30</span>
+                        </div>
+                    </div>
+
+                    <!-- Rotation Container -->
+                    <div class="avatar-display" id="rotation-view" style="display: none;">
+                        <div id="rotation-container" class="rotation-container">
+                            <img id="rotation-image" src="" alt="Rotating Avatar">
+                            <div class="rotation-overlay">
+                                <span id="rotation-angle-display">0°</span>
+                            </div>
+                            <div class="rotation-instructions">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                                </svg>
+                                <span>Drag to rotate</span>
+                            </div>
+                        </div>
+
+                        <!-- Gender Toggle -->
+                        <div class="gender-toggle">
+                            <span class="gender-label">View:</span>
+                            <div class="toggle-buttons">
+                                <button
+                                    class="toggle-btn active"
+                                    id="gender-male"
+                                    onclick="HeadRotation.setGender('male')"
+                                >
+                                    Male
+                                </button>
+                                <button
+                                    class="toggle-btn"
+                                    id="gender-female"
+                                    onclick="HeadRotation.setGender('female')"
+                                >
+                                    Female
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Preload Progress -->
+                        <div id="preload-progress-container" class="preload-progress" style="display: none;">
+                            <div class="preload-progress-bar">
+                                <div id="preload-progress-bar" class="preload-progress-fill"></div>
+                            </div>
+                            <span id="preload-progress-text" class="preload-progress-text">Loading images...</span>
                         </div>
                     </div>
                     <div class="comparison-display">
@@ -304,6 +352,9 @@
     <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/calculator.js"></script>
+    <script src="js/rotation-config.js"></script>
+    <script src="js/image-preloader.js"></script>
+    <script src="js/rotation.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
