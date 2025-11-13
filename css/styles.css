@@ -1,0 +1,846 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1e2530 25%, #2d2d2d 50%, #1e2530 75%, #1a1a1a 100%);
+    min-height: 100vh;
+    color: #2a2a2a;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+    border-radius: 12px;
+    padding: 3rem;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5), 0 0 1px rgba(70, 130, 180, 0.1);
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+/* Logo */
+.logo {
+    font-size: 1.75rem;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: #3a3a3a;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+/* Typography */
+h1 {
+    font-size: 2.25rem;
+    color: #2a2a2a;
+    margin-bottom: 1rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+h2 {
+    font-size: 1.875rem;
+    color: #2a2a2a;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+h3 {
+    font-size: 1.125rem;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+h3:first-child {
+    margin-top: 0;
+}
+
+.intro, .subtitle {
+    font-size: 1.0rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+.help-text {
+    font-size: 0.875rem;
+    color: #888;
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #3a4a5a 0%, #2a2a2a 100%);
+    color: #ffffff;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(70, 130, 180, 0.1);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #4a5a6a 0%, #3a3a3a 100%);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3), 0 0 30px rgba(70, 130, 180, 0.15);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #4a4a4a;
+    border: 1px solid #4a4a4a;
+    padding: 0.75rem 2rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 2rem;
+}
+
+.btn-secondary:hover {
+    background: #4a4a4a;
+    color: white;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.875rem;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.btn-text:hover {
+    color: #2a2a2a;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* Options Grid */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.option-card {
+    background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    padding: 2.5rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.option-card:hover {
+    border-color: #6a7a8a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 15px rgba(70, 130, 180, 0.1);
+    background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+}
+
+/* Ethnicity Icons - Elegant Letters */
+.option-icon-letter {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    font-weight: 200;
+    color: #3a4a5a;
+    border: 2px solid #d0d0d0;
+    border-radius: 50%;
+    transition: all 0.3s;
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+}
+
+.option-card:hover .option-icon-letter {
+    border-color: #6a7a8a;
+    color: #2a2a2a;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.15);
+}
+
+/* Hair Type Icons - Minimalist Lines */
+.option-icon-hair {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hair-lines {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Straight hair - clean horizontal lines with hover animation */
+.hair-lines.straight {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+
+.hair-lines.straight::before,
+.hair-lines.straight::after {
+    content: '';
+    height: 2px;
+    background: linear-gradient(to right, #6a7a8a 0%, #4a5a6a 100%);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    position: absolute;
+}
+
+/* Straight Short - 3 compact lines (top, middle via shadow, bottom) */
+.hair-lines.straight.short::before {
+    width: 45px;
+    top: 15px;
+    /* Middle line (40px) via box-shadow */
+    box-shadow: 0 16px 0 -2.5px #6a7a8a;
+}
+
+.hair-lines.straight.short::after {
+    width: 35px;
+    bottom: 15px;
+}
+
+/* Straight Long - 3 extended lines (top, middle via shadow, bottom) */
+.hair-lines.straight.long::before {
+    width: 60px;
+    top: 15px;
+    /* Middle line (55px) via box-shadow */
+    box-shadow: 0 16px 0 -2.5px #6a7a8a;
+}
+
+.hair-lines.straight.long::after {
+    width: 50px;
+    bottom: 15px;
+}
+
+/* Curly hair - wavy lines */
+.hair-lines.curly::before,
+.hair-lines.curly::after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #6a7a8a 0%, #4a5a6a 100%);
+    border-radius: 50%;
+}
+
+.hair-lines.curly.short::before {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #6a7a8a;
+    background: transparent;
+    border-radius: 50% 50% 0 0;
+    border-bottom: none;
+}
+
+.hair-lines.curly.short::after {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #6a7a8a;
+    background: transparent;
+    border-radius: 0 0 50% 50%;
+    border-top: none;
+    margin-top: -5px;
+}
+
+.hair-lines.curly.long::before {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #6a7a8a;
+    background: transparent;
+    border-radius: 50% 50% 0 0;
+    border-bottom: none;
+}
+
+.hair-lines.curly.long::after {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #6a7a8a;
+    background: transparent;
+    border-radius: 0 0 50% 50%;
+    border-top: none;
+    margin-top: -5px;
+}
+
+.option-card:hover .hair-lines::before,
+.option-card:hover .hair-lines::after {
+    border-color: #4a5a6a;
+}
+
+/* Hover effects for straight hair - all 3 lines expand and darken */
+.option-card:hover .hair-lines.straight.short::before {
+    width: 50px;
+    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+    /* Middle line expands too */
+    box-shadow: 0 16px 0 -2.5px #4a5a6a;
+}
+
+.option-card:hover .hair-lines.straight.short::after {
+    width: 42px;
+    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+}
+
+.option-card:hover .hair-lines.straight.long::before {
+    width: 68px;
+    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+    /* Middle line expands too */
+    box-shadow: 0 16px 0 -2.5px #4a5a6a;
+}
+
+.option-card:hover .hair-lines.straight.long::after {
+    width: 58px;
+    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+}
+
+/* Hover effects for curly hair */
+.option-card:hover .hair-lines.curly::before,
+.option-card:hover .hair-lines.curly::after {
+    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+}
+
+.option-card h3 {
+    font-size: 1.125rem;
+    color: #2a2a2a;
+    margin: 0.5rem 0;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.option-card p {
+    font-size: 0.813rem;
+    color: #777;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Simulator Screen */
+.simulator-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+}
+
+.simulator-header {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000;
+}
+
+.simulator-header .logo {
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 6px;
+    font-size: 1.5rem;
+}
+
+.simulator-header h1 {
+    color: #e0e0e0;
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.simulator-header .btn-text {
+    color: #c0c0c0;
+}
+
+.simulator-header .btn-text:hover {
+    color: #ffffff;
+}
+
+.simulator-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Avatar Section */
+.avatar-section {
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f8f8 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid #d8d8d8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 10px rgba(70, 130, 180, 0.05);
+}
+
+.view-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.view-tab {
+    flex: 1;
+    background: #f5f5f5;
+    border: 1px solid #d0d0d0;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #666;
+}
+
+.view-tab:hover {
+    border-color: #6a7a8a;
+    background: #e8e8e8;
+    color: #2a2a2a;
+}
+
+.view-tab.active {
+    background: linear-gradient(135deg, #3a4a5a 0%, #2a2a2a 100%);
+    color: white;
+    border-color: #2a2a2a;
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.15);
+}
+
+.avatar-display {
+    position: relative;
+    background: linear-gradient(to bottom, #fefefe 0%, #f9f9f9 100%);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e8e8e8;
+}
+
+.avatar-display img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    filter: grayscale(0.15);
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(42, 42, 42, 0.85);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 400;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.comparison-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.comparison-item {
+    background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid #d0d0d0;
+    transition: all 0.3s;
+}
+
+.comparison-item.without {
+    border-left: 3px solid #888;
+}
+
+.comparison-item.with {
+    border-left: 3px solid #3a4a5a;
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.08);
+}
+
+.comparison-item .label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.comparison-item .percentage {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #2a2a2a;
+    margin-bottom: 0.25rem;
+}
+
+.comparison-item.without .percentage {
+    color: #666;
+}
+
+.comparison-item.with .percentage {
+    color: #2a2a2a;
+}
+
+.comparison-item .sublabel {
+    display: block;
+    font-size: 0.813rem;
+    color: #aaa;
+    font-weight: 300;
+}
+
+/* Controls Section */
+.controls-section {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.control-panel {
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f8f8 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid #d8d8d8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 10px rgba(70, 130, 180, 0.05);
+}
+
+.control-group {
+    margin-bottom: 2.5rem;
+}
+
+.control-group label {
+    display: block;
+    font-weight: 400;
+    color: #4a4a4a;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.control-group input[type="range"] {
+    width: 100%;
+    height: 2px;
+    border-radius: 0;
+    background: linear-gradient(to right, #d0d0d0 0%, #888 100%);
+    outline: none;
+    -webkit-appearance: none;
+    transition: background 0.3s;
+}
+
+.control-group input[type="range"]:hover {
+    background: linear-gradient(to right, #c0c0c0 0%, #666 100%);
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #3a4a5a 0%, #2a2a2a 100%);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 8px rgba(70, 130, 180, 0.2);
+    transition: all 0.2s;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb:hover {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #4a5a6a 0%, #3a3a3a 100%);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), 0 0 12px rgba(70, 130, 180, 0.3);
+}
+
+.control-group input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #3a4a5a 0%, #2a2a2a 100%);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 8px rgba(70, 130, 180, 0.2);
+    transition: all 0.2s;
+}
+
+.control-group input[type="range"]::-moz-range-thumb:hover {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #4a5a6a 0%, #3a3a3a 100%);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), 0 0 12px rgba(70, 130, 180, 0.3);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.5rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Work Environment Buttons */
+.work-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.work-btn {
+    padding: 0.875rem 1rem;
+    font-size: 0.813rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    border: 1px solid #d0d0d0;
+    background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+    color: #666;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.work-btn:hover {
+    background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+    border-color: #6a7a8a;
+    color: #2a2a2a;
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.12);
+    transform: translateY(-1px);
+}
+
+.work-btn.active {
+    background: linear-gradient(135deg, #3a4a5a 0%, #2a2a2a 100%);
+    color: #ffffff;
+    border-color: #2a2a2a;
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.2);
+}
+
+.work-btn:active {
+    transform: translateY(0);
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.75rem;
+    cursor: pointer;
+    border: 1px solid #888;
+}
+
+/* Elixr Toggle */
+.elixr-toggle {
+    background: linear-gradient(135deg, #2a3a4a 0%, #1a1a1a 100%);
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 2rem 0;
+    border: 1px solid #1a2530;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(70, 130, 180, 0.1);
+}
+
+.elixr-toggle h3 {
+    color: #e0e0e0;
+    margin: 0 0 1rem 0;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.toggle-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.toggle-btn {
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    border: 1px solid #6a7a8a;
+    background: transparent;
+    color: #c0c0c0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.toggle-btn:hover {
+    background: rgba(70, 130, 180, 0.1);
+    border-color: #7a8a9a;
+    color: #e0e0e0;
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.15);
+}
+
+.toggle-btn.active {
+    background: #ffffff;
+    color: #2a2a2a;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.2);
+}
+
+.elixr-info {
+    color: #b0b0b0;
+    font-size: 0.813rem;
+    line-height: 1.6;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Feature List */
+.feature-list {
+    list-style: none;
+    text-align: left;
+    margin: 2rem 0;
+    padding: 0;
+}
+
+.feature-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e8e8e8;
+    color: #666;
+    font-size: 0.938rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.feature-list li:last-child {
+    border-bottom: none;
+}
+
+.feature-list li:before {
+    content: "—";
+    margin-right: 0.75rem;
+    color: #aaa;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .simulator-content {
+        grid-template-columns: 1fr;
+    }
+
+    .controls-section {
+        max-height: none;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 2rem 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .simulator-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .comparison-display {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        letter-spacing: 4px;
+        font-size: 1.25rem;
+    }
+}
