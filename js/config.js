@@ -43,27 +43,55 @@ const CONFIG = {
         100: { min: 85, max: 100, name: '100' } // 85-100% gray
     },
 
-    // Lifestyle factor weights (for continuous sliders 0-100)
+    // Lifestyle factor weights (research-based multipliers)
+    // Based on peer-reviewed studies: smoking 2.5x risk, stress ~1.35x, UV ~1.15-1.25x
+    // Each factor uses a multiplier approach: base_gray × multiplier
+    // Reference: app_data.md - comprehensive hair whitening research
     factors: {
         stress: {
-            maxWeight: 0.6,  // Maximum impact at 100%
+            // Stress contributes 5-10% overall impact
+            // Multiplier ranges from 1.0 (no stress) to 1.35 (extreme stress)
+            minMultiplier: 1.0,
+            maxMultiplier: 1.35,  // High stress = 1.35x graying rate
+            ageShift: 2.5,         // Can advance graying by ~2.5 years
             label: 'Stress Level'
         },
         sun: {
-            maxWeight: 0.4,  // Maximum impact at 100%
+            // UV exposure contributes ~5% overall impact
+            // Multiplier ranges from 1.0 (minimal) to 1.25 (extreme)
+            minMultiplier: 1.0,
+            maxMultiplier: 1.25,   // Extreme UV = 1.25x graying rate
+            ageShift: 2.5,         // Can advance graying by ~2.5 years
             label: 'Sun Exposure'
         },
         work: {
-            0: { weight: 0, label: 'Indoor / Office' },
-            1: { weight: 0.25, label: 'Outdoor' },
-            2: { weight: 0.5, label: 'Chemical Exposure' }
+            // Work environment impact based on exposure type
+            0: {
+                multiplier: 1.0,   // Indoor/Office: no additional impact
+                ageShift: 0,
+                label: 'Indoor / Office'
+            },
+            1: {
+                multiplier: 1.15,  // Outdoor: moderate UV exposure
+                ageShift: 1.5,
+                label: 'Outdoor'
+            },
+            2: {
+                multiplier: 1.30,  // Chemical exposure: oxidative stress
+                ageShift: 2.5,
+                label: 'Chemical Exposure'
+            }
         },
         smoking: {
-            weight: 0.4,
+            // Smoking contributes 10-15% overall impact
+            // Smokers are 2.5x more likely to gray prematurely
+            multiplier: 2.2,       // Heavy smoker = 2.2x graying rate
+            ageShift: 3.5,         // Advances graying by ~3.5 years
             label: 'Smoking'
         },
         dyeing: {
-            weight: 0, // Doesn't affect actual whitening, just visibility
+            multiplier: 1.0,       // Doesn't affect actual whitening
+            ageShift: 0,
             label: 'Hair Dyeing'
         }
     },

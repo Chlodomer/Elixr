@@ -31,24 +31,70 @@ const Calculator = {
 
     /**
      * Calculate base gray percentage without Elixr
+     * Uses research-based multiplicative model:
+     * - Age shifts from lifestyle factors (advancing effective age)
+     * - Multipliers applied to graying rate
+     * - Based on peer-reviewed hair whitening studies (see app_data.md)
      */
     _calculateBase(ethnicity, params) {
-        // Age-based progression
-        const yearsSinceStart = Math.max(0, params.age - ethnicity.startAge);
-        const ageModifier = yearsSinceStart * 1.2; // ~1.2% gray per year after start age
+        // Step 1: Calculate total age shift from all factors
+        // Each factor can "advance" the biological age of hair
+        let totalAgeShift = 0;
 
-        // Lifestyle factors (continuous 0-100 scale converted to impact)
-        // params.stress and params.sun are now 0-100 values
-        const stressModifier = (params.stress / 100) * CONFIG.factors.stress.maxWeight * 10;
-        const sunModifier = (params.sun / 100) * CONFIG.factors.sun.maxWeight * 10;
-        const workModifier = CONFIG.factors.work[params.work].weight * 10;
-        const smokingModifier = params.smoking ? CONFIG.factors.smoking.weight * 10 : 0;
+        // Stress age shift (0-100% slider)
+        const stressShift = (params.stress / 100) * CONFIG.factors.stress.ageShift;
+        totalAgeShift += stressShift;
 
-        // Combine all factors
-        const lifestyleTotal = stressModifier + sunModifier + workModifier + smokingModifier;
+        // Sun/UV age shift (0-100% slider)
+        const sunShift = (params.sun / 100) * CONFIG.factors.sun.ageShift;
+        totalAgeShift += sunShift;
 
-        // Apply ethnicity base rate
-        const totalGray = (ageModifier + lifestyleTotal) * ethnicity.baseRate;
+        // Work environment age shift
+        totalAgeShift += CONFIG.factors.work[params.work].ageShift;
+
+        // Smoking age shift
+        if (params.smoking) {
+            totalAgeShift += CONFIG.factors.smoking.ageShift;
+        }
+
+        // Step 2: Calculate effective age (biological age for hair)
+        const effectiveAge = params.age + totalAgeShift;
+        const yearsSinceStart = Math.max(0, effectiveAge - ethnicity.startAge);
+
+        // Step 3: Base graying rate (intrinsic aging)
+        // Research shows ~1.2-1.5% gray per year after onset for Caucasians
+        // This is the baseline before multipliers
+        const baseGrayingRate = 1.3; // % per year
+        let baseGray = yearsSinceStart * baseGrayingRate;
+
+        // Step 4: Apply lifestyle multipliers
+        // These multiply the base graying rate (research-based)
+        let totalMultiplier = 1.0;
+
+        // Stress multiplier (scales from 1.0 to 1.35)
+        const stressRange = CONFIG.factors.stress.maxMultiplier - CONFIG.factors.stress.minMultiplier;
+        const stressMultiplier = CONFIG.factors.stress.minMultiplier + (params.stress / 100) * stressRange;
+        totalMultiplier *= stressMultiplier;
+
+        // Sun/UV multiplier (scales from 1.0 to 1.25)
+        const sunRange = CONFIG.factors.sun.maxMultiplier - CONFIG.factors.sun.minMultiplier;
+        const sunMultiplier = CONFIG.factors.sun.minMultiplier + (params.sun / 100) * sunRange;
+        totalMultiplier *= sunMultiplier;
+
+        // Work environment multiplier
+        totalMultiplier *= CONFIG.factors.work[params.work].multiplier;
+
+        // Smoking multiplier (2.2x if smoking)
+        if (params.smoking) {
+            totalMultiplier *= CONFIG.factors.smoking.multiplier;
+        }
+
+        // Step 5: Apply multiplier to base gray
+        const adjustedGray = baseGray * totalMultiplier;
+
+        // Step 6: Apply ethnicity base rate
+        // Different ethnicities have different overall graying rates
+        const totalGray = adjustedGray * ethnicity.baseRate;
 
         return totalGray;
     },
