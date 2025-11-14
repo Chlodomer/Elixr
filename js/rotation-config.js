@@ -93,9 +93,16 @@ const ROTATION_CONFIG = {
         // Get actual angle from index
         const angle = angleIndex * this.angleStep;
 
-        // Build path: images/rotation/{ethnicity}/{hairType}/{gender}/{angle}-{grayLevel}.svg
-        // Note: Using .svg for placeholders during testing. Replace with .jpg for production images.
-        return `${this.images.basePath}/${ethnicity}/${hairType}/${gender}/${angle}-${grayLevel}.svg`;
+        // Determine file extension based on availability of real photos
+        // Caucasian male with straight-short hair uses real PNG photos
+        let extension = '.svg'; // Default to SVG placeholders
+
+        if (ethnicity === 'caucasian' && hairType === 'straight-short' && gender === 'male') {
+            extension = '.png'; // Use real photos for caucasian male
+        }
+
+        // Build path: images/rotation/{ethnicity}/{hairType}/{gender}/{angle}-{grayLevel}.{ext}
+        return `${this.images.basePath}/${ethnicity}/${hairType}/${gender}/${angle}-${grayLevel}${extension}`;
     },
 
     /**
