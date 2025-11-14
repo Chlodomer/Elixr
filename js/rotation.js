@@ -205,6 +205,14 @@ const HeadRotation = {
         const result = Calculator.calculateGrayPercentage(params);
         const displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
 
+        console.log('[Rotation] Updating image:', {
+            ethnicity: app.state.ethnicity,
+            hairType: app.state.hairType,
+            gender: this.state.gender,
+            angleIndex: this.state.currentAngleIndex,
+            grayPercent: displayPercent
+        });
+
         // Get image path
         const imagePath = ROTATION_CONFIG.getImagePath(
             app.state.ethnicity,
@@ -213,6 +221,8 @@ const HeadRotation = {
             this.state.currentAngleIndex,
             displayPercent
         );
+
+        console.log('[Rotation] Loading image:', imagePath);
 
         // Update image
         this.elements.image.src = imagePath;
@@ -227,10 +237,17 @@ const HeadRotation = {
 
         // Handle image error (show placeholder)
         this.elements.image.onerror = () => {
+            console.error('[Rotation] Failed to load image:', imagePath);
+            console.log('[Rotation] Showing placeholder instead');
             this.elements.image.src = this.createPlaceholder(
                 this.state.currentAngleIndex,
                 displayPercent
             );
+        };
+
+        // Log successful image load
+        this.elements.image.onload = () => {
+            console.log('[Rotation] Image loaded successfully');
         };
     },
 
