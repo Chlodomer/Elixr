@@ -461,7 +461,7 @@ At age ${this.state.age}:
             shareText += `\nElixr reduces hair whitening by ${result.withoutElixr - result.withElixr}%!`;
         }
 
-Try the simulator: ${window.location.href}`;
+        shareText += `\n\nTry the simulator: ${window.location.href}`;
 
         // Try to use Web Share API if available
         if (navigator.share) {
