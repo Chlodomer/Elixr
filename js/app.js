@@ -364,6 +364,12 @@ const app = {
         }
 
         console.log('Projection updated:', { currentAge: this.state.currentAge, projectionYears: years, displayAge: this.state.age });
+
+        // Explicitly update rotation view to show/hide comparison slider immediately
+        if (window.HeadRotation && HeadRotation.elements.container) {
+            HeadRotation.updateImage();
+        }
+
         this.updateSimulator();
     },
 

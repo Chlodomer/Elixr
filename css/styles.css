@@ -285,57 +285,50 @@ h3:first-child {
     bottom: 15px;
 }
 
-/* Curly hair - wavy lines */
-.hair-lines.curly::before,
-.hair-lines.curly::after {
-    content: '';
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(to right, #6a7a8a 0%, #4a5a6a 100%);
-    border-radius: 50%;
+/* Curly hair - spiral curl */
+.hair-lines.curly {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
+.hair-lines.curly::before {
+    content: '';
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.hair-lines.curly::after {
+    content: '';
+    display: none;
+}
+
+/* Curly Short - compact spiral */
 .hair-lines.curly.short::before {
     width: 35px;
     height: 35px;
-    border: 2px solid #6a7a8a;
-    background: transparent;
-    border-radius: 50% 50% 0 0;
-    border-bottom: none;
+    border: 2.5px solid transparent;
+    border-top-color: #6a7a8a;
+    border-right-color: #6a7a8a;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    box-shadow:
+        inset 8px -8px 0 -6px #6a7a8a;
 }
 
-.hair-lines.curly.short::after {
-    width: 35px;
-    height: 35px;
-    border: 2px solid #6a7a8a;
-    background: transparent;
-    border-radius: 0 0 50% 50%;
-    border-top: none;
-    margin-top: -5px;
-}
-
+/* Curly Long - extended spiral */
 .hair-lines.curly.long::before {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #6a7a8a;
-    background: transparent;
-    border-radius: 50% 50% 0 0;
-    border-bottom: none;
-}
-
-.hair-lines.curly.long::after {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #6a7a8a;
-    background: transparent;
-    border-radius: 0 0 50% 50%;
-    border-top: none;
-    margin-top: -5px;
-}
-
-.option-card:hover .hair-lines::before,
-.option-card:hover .hair-lines::after {
-    border-color: #4a5a6a;
+    width: 45px;
+    height: 45px;
+    border: 2.5px solid transparent;
+    border-top-color: #6a7a8a;
+    border-right-color: #6a7a8a;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    box-shadow:
+        inset 10px -10px 0 -6px #6a7a8a,
+        inset 3px -3px 0 -1px #6a7a8a;
 }
 
 /* Hover effects for straight hair - all 3 lines expand and darken */
@@ -364,9 +357,23 @@ h3:first-child {
 }
 
 /* Hover effects for curly hair */
-.option-card:hover .hair-lines.curly::before,
-.option-card:hover .hair-lines.curly::after {
-    background: linear-gradient(to right, #4a5a6a 0%, #2a3a4a 100%);
+.option-card:hover .hair-lines.curly.short::before {
+    width: 38px;
+    height: 38px;
+    border-top-color: #4a5a6a;
+    border-right-color: #4a5a6a;
+    box-shadow:
+        inset 9px -9px 0 -6px #4a5a6a;
+}
+
+.option-card:hover .hair-lines.curly.long::before {
+    width: 48px;
+    height: 48px;
+    border-top-color: #4a5a6a;
+    border-right-color: #4a5a6a;
+    box-shadow:
+        inset 11px -11px 0 -6px #4a5a6a,
+        inset 4px -4px 0 -1px #4a5a6a;
 }
 
 .option-card h3 {
@@ -1050,10 +1057,15 @@ h3:first-child {
 /* Comparison Slider Styles */
 .comparison-slider-container {
     width: 100%;
-    height: 400px;
-    max-width: 600px;
+    height: 100%;
     position: relative;
-    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(70, 130, 180, 0.05);
 }
 
 .comparison-slider {
@@ -1061,7 +1073,6 @@ h3:first-child {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-radius: 12px;
 }
 
 .comparison-image-wrapper {

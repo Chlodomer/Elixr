@@ -226,13 +226,15 @@ const HeadRotation = {
         console.log('[Rotation] Checking comparison mode:', {
             hasComparisonSlider: !!window.ComparisonSlider,
             ethnicity: app.state.ethnicity,
-            hairType: app.state.hairType
+            hairType: app.state.hairType,
+            projectionYears: app.state.projectionYears,
+            age: app.state.age
         });
 
         const useComparison = window.ComparisonSlider &&
                               ComparisonSlider.shouldShowComparison(app.state.ethnicity, app.state.hairType);
 
-        console.log('[Rotation] useComparison =', useComparison);
+        console.log('[Rotation] useComparison =', useComparison, 'projectionYears =', app.state.projectionYears);
 
         if (useComparison) {
             // Hide regular image, show comparison slider

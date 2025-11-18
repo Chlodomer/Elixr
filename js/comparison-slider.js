@@ -165,7 +165,9 @@ const ComparisonSlider = {
      */
     show() {
         this.state.isActive = true;
-        this.elements.container.style.display = 'block';
+        this.elements.container.style.display = 'flex';
+        // Ensure slider UI is properly initialized
+        this.updateSliderUI();
         console.log('Comparison slider shown');
     },
 
@@ -183,10 +185,27 @@ const ComparisonSlider = {
      */
     shouldShowComparison(ethnicity, hairType) {
         // Only show for caucasian straight-short (where we have real photos)
-        const shouldShow = ethnicity === 'caucasian' && hairType === 'straight-short';
+        // AND only when viewing 10 or 20 years projection
+        const projectionYears = app.state.projectionYears;
+
+        console.log('[ComparisonSlider] shouldShowComparison DEBUG:', {
+            ethnicity,
+            'ethnicity === "caucasian"': ethnicity === 'caucasian',
+            hairType,
+            'hairType === "straight-short"': hairType === 'straight-short',
+            projectionYears,
+            'typeof projectionYears': typeof projectionYears,
+            'projectionYears === 10': projectionYears === 10,
+            'projectionYears === 20': projectionYears === 20
+        });
+
+        const shouldShow = ethnicity === 'caucasian' &&
+                          hairType === 'straight-short' &&
+                          (projectionYears === 10 || projectionYears === 20);
         console.log('[ComparisonSlider] shouldShowComparison:', {
             ethnicity,
             hairType,
+            projectionYears,
             shouldShow
         });
         return shouldShow;
@@ -225,34 +244,43 @@ const ComparisonSlider = {
         // Get the closest available angle
         const angle = this.getClosestAvailableAngle(angleIndex);
 
-        // Path to dark (without treatment) images
-        const darkPath = `40yo caucasian dark/${angle}.png`;
+        // Determine paths based on projection years
+        let beforePath, afterPath;
+        const projectionYears = app.state.projectionYears;
 
-        // Path to silver (with treatment) images
-        const silverPath = `40yo caucasian silver/${angle}.png`;
+        if (projectionYears === 10) {
+            // 10 years projection (age 40): dark vs silver
+            beforePath = `40yo caucasian dark/${angle}.png`;
+            afterPath = `40yo caucasian silver/${angle}.png`;
+        } else if (projectionYears === 20) {
+            // 20 years projection (age 50): white vs silver
+            beforePath = `40yo caucasian white/${angle}.png`;
+            afterPath = `40yo caucasian silver/${angle}.png`;
+        }
 
         console.log('[ComparisonSlider] Updating images:', {
             angleIndex: angleIndex,
             rotationAngle: angleIndex * ROTATION_CONFIG.angleStep,
             closestAvailableAngle: angle,
-            darkPath: darkPath,
-            silverPath: silverPath
+            projectionYears: projectionYears,
+            beforePath: beforePath,
+            afterPath: afterPath
         });
 
         // Update images
-        this.elements.beforeImage.src = darkPath;
+        this.elements.beforeImage.src = beforePath;
         this.elements.beforeImage.alt = `With Elixr - ${angle}° view`;
 
-        this.elements.afterImage.src = silverPath;
+        this.elements.afterImage.src = afterPath;
         this.elements.afterImage.alt = `Without Elixr - ${angle}° view`;
 
         // Handle image errors
         this.elements.beforeImage.onerror = () => {
-            console.error('[ComparisonSlider] Failed to load before image:', darkPath);
+            console.error('[ComparisonSlider] Failed to load before image:', beforePath);
         };
 
         this.elements.afterImage.onerror = () => {
-            console.error('[ComparisonSlider] Failed to load after image:', silverPath);
+            console.error('[ComparisonSlider] Failed to load after image:', afterPath);
         };
 
         // Log successful loads
