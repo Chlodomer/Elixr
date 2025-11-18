@@ -58,8 +58,7 @@ const app = {
     selectHairType(hairType) {
         this.state.hairType = hairType;
         console.log('Selected hair type:', hairType);
-        this.showScreen('simulator-screen');
-        this.initSimulator();
+        this.showScreen('lifestyle1-screen');
     },
 
     /**
@@ -357,6 +356,62 @@ const app = {
 
         console.log('Updated discrete parameter:', param, labels[intValue]);
         this.updateSimulator();
+    },
+
+    /**
+     * Update onboarding parameter (stress/sun)
+     */
+    updateOnboardingParameter(param, value) {
+        const intValue = parseInt(value);
+        this.state.parameters[param] = intValue;
+
+        const labels = ['Minimal', 'Moderate', 'Extreme'];
+        document.getElementById(`${param}-value-onboarding`).textContent = labels[intValue];
+
+        console.log('Updated onboarding parameter:', param, labels[intValue]);
+    },
+
+    /**
+     * Continue from lifestyle1 to lifestyle2
+     */
+    continueToLifestyle2() {
+        this.showScreen('lifestyle2-screen');
+    },
+
+    /**
+     * Update work environment in onboarding
+     */
+    updateOnboardingWork(value) {
+        this.state.parameters.work = value;
+
+        // Update button states in onboarding screen
+        const buttons = document.querySelectorAll('#lifestyle2-screen .work-btn');
+        buttons.forEach(btn => {
+            if (parseInt(btn.dataset.value) === value) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        console.log('Updated work environment:', value);
+    },
+
+    /**
+     * Update checkbox in onboarding
+     */
+    updateOnboardingCheckbox(param, value) {
+        this.state.parameters[param] = value;
+        console.log('Updated onboarding checkbox:', param, value);
+    },
+
+    /**
+     * Complete onboarding and go to simulator
+     */
+    completeOnboarding() {
+        console.log('Onboarding completed with parameters:', this.state.parameters);
+        this.showScreen('simulator-screen');
+        this.initSimulator();
     },
 
     /**

@@ -126,6 +126,125 @@
         </div>
     </div>
 
+    <!-- Lifestyle Factors Screen 1: Stress & Sun -->
+    <div id="lifestyle1-screen" class="screen">
+        <div class="container">
+            <h2>Lifestyle Factors</h2>
+            <p class="subtitle">These factors influence hair whitening progression</p>
+
+            <div class="control-group" style="margin-top: 2rem;">
+                <label>
+                    Stress Level: <span id="stress-value-onboarding">Minimal</span>
+                </label>
+                <input
+                    type="range"
+                    id="stress-slider-onboarding"
+                    min="0"
+                    max="2"
+                    step="1"
+                    value="0"
+                    oninput="app.updateOnboardingParameter('stress', this.value)"
+                >
+                <div class="slider-labels">
+                    <span>Minimal</span>
+                    <span>Moderate</span>
+                    <span>Extreme</span>
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-top: 2rem;">
+                <label>
+                    Sun Exposure: <span id="sun-value-onboarding">Minimal</span>
+                </label>
+                <input
+                    type="range"
+                    id="sun-slider-onboarding"
+                    min="0"
+                    max="2"
+                    step="1"
+                    value="0"
+                    oninput="app.updateOnboardingParameter('sun', this.value)"
+                >
+                <div class="slider-labels">
+                    <span>Minimal</span>
+                    <span>Moderate</span>
+                    <span>Extreme</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="app.continueToLifestyle2()">
+                Continue
+            </button>
+            <button class="btn-secondary" onclick="app.showScreen('hairtype-screen')">
+                Back
+            </button>
+        </div>
+    </div>
+
+    <!-- Lifestyle Factors Screen 2: Work, Smoking, Dyeing -->
+    <div id="lifestyle2-screen" class="screen">
+        <div class="container">
+            <h2>Additional Factors</h2>
+            <p class="subtitle">Complete your lifestyle profile</p>
+
+            <div class="control-group" style="margin-top: 2rem;">
+                <label>Work Environment:</label>
+                <div class="work-buttons">
+                    <button
+                        class="work-btn active"
+                        data-value="0"
+                        onclick="app.updateOnboardingWork(0)"
+                    >
+                        Indoor / Office
+                    </button>
+                    <button
+                        class="work-btn"
+                        data-value="1"
+                        onclick="app.updateOnboardingWork(1)"
+                    >
+                        Outdoor
+                    </button>
+                    <button
+                        class="work-btn"
+                        data-value="2"
+                        onclick="app.updateOnboardingWork(2)"
+                    >
+                        Chemical Exposure
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group checkbox-group" style="margin-top: 2rem;">
+                <label>
+                    <input
+                        type="checkbox"
+                        id="smoking-check-onboarding"
+                        onchange="app.updateOnboardingCheckbox('smoking', this.checked)"
+                    >
+                    Smoking
+                </label>
+            </div>
+
+            <div class="control-group checkbox-group">
+                <label>
+                    <input
+                        type="checkbox"
+                        id="dyeing-check-onboarding"
+                        onchange="app.updateOnboardingCheckbox('dyeing', this.checked)"
+                    >
+                    Regular Hair Dyeing
+                </label>
+            </div>
+
+            <button class="btn-primary" onclick="app.completeOnboarding()">
+                See My Projection
+            </button>
+            <button class="btn-secondary" onclick="app.showScreen('lifestyle1-screen')">
+                Back
+            </button>
+        </div>
+    </div>
+
     <!-- Main Simulator Screen -->
     <div id="simulator-screen" class="screen">
         <div class="simulator-container">
@@ -230,7 +349,7 @@
                     </div>
                 </div>
 
-                <!-- Right: Controls -->
+                <!-- Right: Results & Stats -->
                 <div class="controls-section">
                     <div class="control-panel">
                         <h3>Your Projection</h3>
@@ -268,7 +387,7 @@
                             </button>
                         </div>
 
-                        <!-- Comparison Display moved here -->
+                        <!-- Comparison Display -->
                         <div class="comparison-display-inline">
                             <div class="comparison-item-inline without">
                                 <span class="label">Without Elixr</span>
@@ -280,98 +399,6 @@
                                 <span class="percentage" id="gray-with-inline">0%</span>
                                 <span class="sublabel">gray hair</span>
                             </div>
-                        </div>
-
-                        <h3>Lifestyle Factors</h3>
-                        <p class="help-text">Adjust factors that influence hair whitening</p>
-
-                        <div class="control-group">
-                            <label>
-                                Stress Level: <span id="stress-value">Minimal</span>
-                            </label>
-                            <input
-                                type="range"
-                                id="stress-slider"
-                                min="0"
-                                max="2"
-                                step="1"
-                                value="0"
-                                oninput="app.updateDiscreteParameter('stress', this.value)"
-                            >
-                            <div class="slider-labels">
-                                <span>Minimal</span>
-                                <span>Moderate</span>
-                                <span>Extreme</span>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label>
-                                Sun Exposure: <span id="sun-value">Minimal</span>
-                            </label>
-                            <input
-                                type="range"
-                                id="sun-slider"
-                                min="0"
-                                max="2"
-                                step="1"
-                                value="0"
-                                oninput="app.updateDiscreteParameter('sun', this.value)"
-                            >
-                            <div class="slider-labels">
-                                <span>Minimal</span>
-                                <span>Moderate</span>
-                                <span>Extreme</span>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label>Work Environment:</label>
-                            <div class="work-buttons">
-                                <button
-                                    class="work-btn active"
-                                    data-value="0"
-                                    onclick="app.updateWork(0)"
-                                >
-                                    Indoor / Office
-                                </button>
-                                <button
-                                    class="work-btn"
-                                    data-value="1"
-                                    onclick="app.updateWork(1)"
-                                >
-                                    Outdoor
-                                </button>
-                                <button
-                                    class="work-btn"
-                                    data-value="2"
-                                    onclick="app.updateWork(2)"
-                                >
-                                    Chemical Exposure
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="control-group checkbox-group">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    id="smoking-check"
-                                    onchange="app.updateParameter('smoking', this.checked)"
-                                >
-                                Smoking
-                            </label>
-                        </div>
-
-                        <div class="control-group checkbox-group">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    id="dyeing-check"
-                                    onchange="app.updateParameter('dyeing', this.checked)"
-                                >
-                                Regular Hair Dyeing
-                            </label>
                         </div>
 
                         <button class="btn-primary btn-full" onclick="app.shareResults()">
