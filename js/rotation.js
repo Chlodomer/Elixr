@@ -10,7 +10,9 @@ const HeadRotation = {
         lastX: 0,                  // Last X position (for velocity calculation)
         velocity: 0,               // Current rotation velocity
         gender: 'male',            // Current gender selection
-        animationFrame: null       // RequestAnimationFrame ID
+        animationFrame: null,      // RequestAnimationFrame ID
+        isAutoRotating: false,     // Is auto-rotation active
+        autoRotateSpeed: 0.5       // Auto-rotation speed (degrees per frame)
     },
 
     // Reference to DOM elements
@@ -96,6 +98,11 @@ const HeadRotation = {
         this.state.lastX = e.clientX;
         this.state.velocity = 0;
         this.elements.container.style.cursor = 'grabbing';
+
+        // Stop auto-rotation when user manually drags
+        if (this.state.isAutoRotating) {
+            this.toggleAutoRotate();
+        }
     },
 
     /**
@@ -243,11 +250,16 @@ const HeadRotation = {
             const params = {
                 ethnicity: app.state.ethnicity,
                 age: app.state.age,
+                projectionYears: app.state.projectionYears,
                 ...app.state.parameters
             };
 
             const result = Calculator.calculateGrayPercentage(params);
-            const displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
+            // If using Elixr and it's N/A, fall back to without Elixr value
+            let displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
+            if (displayPercent === 'N/A') {
+                displayPercent = result.withoutElixr;
+            }
 
             console.log('[Rotation] Updating image:', {
                 ethnicity: app.state.ethnicity,
@@ -380,12 +392,43 @@ const HeadRotation = {
     },
 
     /**
+     * Toggle auto-rotation on/off
+     */
+    toggleAutoRotate() {
+        this.state.isAutoRotating = !this.state.isAutoRotating;
+        console.log('Auto-rotation:', this.state.isAutoRotating ? 'ON' : 'OFF');
+
+        // Update button state
+        const rotateBtn = document.querySelector('.view-tab[data-view="rotate"]');
+        if (rotateBtn) {
+            if (this.state.isAutoRotating) {
+                rotateBtn.classList.add('auto-rotating');
+                rotateBtn.innerHTML = '360° Rotating...';
+            } else {
+                rotateBtn.classList.remove('auto-rotating');
+                rotateBtn.innerHTML = '360° Rotate';
+            }
+        }
+
+        return this.state.isAutoRotating;
+    },
+
+    /**
      * Animation loop for momentum and smooth updates
      */
     startAnimationLoop() {
         const animate = () => {
+            // Auto-rotation takes priority
+            if (this.state.isAutoRotating && !this.state.isDragging) {
+                this.state.currentAngle += this.state.autoRotateSpeed;
+                const newAngleIndex = ROTATION_CONFIG.getAngleIndex(this.state.currentAngle);
+                if (newAngleIndex !== this.state.currentAngleIndex) {
+                    this.state.currentAngleIndex = newAngleIndex;
+                    this.updateImage();
+                }
+            }
             // Apply momentum decay
-            if (!this.state.isDragging && Math.abs(this.state.velocity) > 0.1) {
+            else if (!this.state.isDragging && Math.abs(this.state.velocity) > 0.1) {
                 const angleChange = (this.state.velocity / ROTATION_CONFIG.dragSensitivity) *
                                    ROTATION_CONFIG.angleStep *
                                    ROTATION_CONFIG.rotationDirection;

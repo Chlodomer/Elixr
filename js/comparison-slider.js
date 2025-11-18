@@ -241,10 +241,10 @@ const ComparisonSlider = {
 
         // Update images
         this.elements.beforeImage.src = darkPath;
-        this.elements.beforeImage.alt = `Without Treatment - ${angle}° view`;
+        this.elements.beforeImage.alt = `With Elixr - ${angle}° view`;
 
         this.elements.afterImage.src = silverPath;
-        this.elements.afterImage.alt = `With Treatment - ${angle}° view`;
+        this.elements.afterImage.alt = `Without Elixr - ${angle}° view`;
 
         // Handle image errors
         this.elements.beforeImage.onerror = () => {

@@ -6,13 +6,14 @@ const Calculator = {
      * @param {Object} params - Calculation parameters
      * @param {string} params.ethnicity - Selected ethnicity
      * @param {number} params.age - Current age
+     * @param {number} params.projectionYears - Years into the future (0, 5, 10, 20)
      * @param {number} params.stress - Stress level (0-2)
      * @param {number} params.sun - Sun exposure (0-2)
      * @param {number} params.work - Work environment (0-2)
      * @param {boolean} params.smoking - Is smoking
      * @param {boolean} params.dyeing - Is dyeing hair
      * @param {boolean} params.usingElixr - Is using Elixr
-     * @returns {Object} - { withoutElixr: number, withElixr: number }
+     * @returns {Object} - { withoutElixr: number, withElixr: number | string }
      */
     calculateGrayPercentage(params) {
         const ethnicity = CONFIG.ethnicities[params.ethnicity];
@@ -21,11 +22,21 @@ const Calculator = {
         const baseGray = this._calculateBase(ethnicity, params);
 
         // Calculation with Elixr
-        const withElixr = this._applyElixrEffect(baseGray, params.age, ethnicity.startAge);
+        // Treatment needs time to work - only show results after 6 months (0.5 years)
+        const projectionYears = params.projectionYears || 0;
+        let withElixr;
+
+        if (projectionYears < 0.5) {
+            // Not enough time for treatment to show results
+            withElixr = 'N/A';
+        } else {
+            withElixr = this._applyElixrEffect(baseGray, params.age, ethnicity.startAge);
+            withElixr = Math.min(100, Math.max(0, Math.round(withElixr)));
+        }
 
         return {
             withoutElixr: Math.min(100, Math.max(0, Math.round(baseGray))),
-            withElixr: Math.min(100, Math.max(0, Math.round(withElixr)))
+            withElixr: withElixr
         };
     },
 

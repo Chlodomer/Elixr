@@ -77,11 +77,15 @@ const ImagePreloader = {
         const params = {
             ethnicity: app.state.ethnicity,
             age: app.state.age,
+            projectionYears: app.state.projectionYears,
             ...app.state.parameters
         };
 
         const result = Calculator.calculateGrayPercentage(params);
-        const displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
+        let displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
+        if (displayPercent === 'N/A') {
+            displayPercent = result.withoutElixr;
+        }
 
         console.log(`Preloading ${gender} images...`);
 

@@ -126,6 +126,27 @@
         </div>
     </div>
 
+    <!-- Gender Selection Screen -->
+    <div id="gender-screen" class="screen">
+        <div class="container">
+            <h2>Select Gender</h2>
+            <p class="subtitle">Choose the visualization you'd like to see</p>
+            <div class="options-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px; margin: 0 auto;">
+                <div class="option-card" onclick="app.selectGender('male')">
+                    <div class="option-icon-letter">M</div>
+                    <h3>Male</h3>
+                </div>
+                <div class="option-card" onclick="app.selectGender('female')">
+                    <div class="option-icon-letter">F</div>
+                    <h3>Female</h3>
+                </div>
+            </div>
+            <button class="btn-secondary" onclick="app.showScreen('hairtype-screen')">
+                Back
+            </button>
+        </div>
+    </div>
+
     <!-- Lifestyle Factors Screen 1: Stress & Sun -->
     <div id="lifestyle1-screen" class="screen">
         <div class="container">
@@ -260,7 +281,7 @@
                 <!-- Left: Avatar Display -->
                 <div class="avatar-section">
                     <div class="view-tabs">
-                        <button class="view-tab active single-tab" data-view="rotate" onclick="app.switchView('rotate')">
+                        <button class="view-tab active single-tab" data-view="rotate" onclick="HeadRotation.toggleAutoRotate()">
                             360° Rotate
                         </button>
                     </div>
@@ -275,12 +296,12 @@
                             <div id="comparison-slider-container" class="comparison-slider-container" style="display: none;">
                                 <div class="comparison-slider">
                                     <div class="comparison-image-wrapper">
-                                        <img id="comparison-before-image" class="comparison-image" src="" alt="Without Treatment">
-                                        <div class="comparison-label comparison-label-before">Without Treatment</div>
+                                        <img id="comparison-before-image" class="comparison-image" src="" alt="With Elixr">
+                                        <div class="comparison-label comparison-label-before">With Elixr</div>
                                     </div>
                                     <div class="comparison-image-wrapper comparison-after" id="comparison-after-wrapper">
-                                        <img id="comparison-after-image" class="comparison-image" src="" alt="With Treatment">
-                                        <div class="comparison-label comparison-label-after">With Treatment</div>
+                                        <img id="comparison-after-image" class="comparison-image" src="" alt="Without Elixr">
+                                        <div class="comparison-label comparison-label-after">Without Elixr</div>
                                     </div>
                                     <div class="comparison-slider-handle" id="comparison-slider-handle">
                                         <div class="comparison-slider-line"></div>
@@ -302,27 +323,6 @@
                                     <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
                                 </svg>
                                 <span>Drag to rotate</span>
-                            </div>
-                        </div>
-
-                        <!-- Gender Toggle -->
-                        <div class="gender-toggle">
-                            <span class="gender-label">View:</span>
-                            <div class="toggle-buttons">
-                                <button
-                                    class="toggle-btn active"
-                                    id="gender-male"
-                                    onclick="HeadRotation.setGender('male')"
-                                >
-                                    Male
-                                </button>
-                                <button
-                                    class="toggle-btn"
-                                    id="gender-female"
-                                    onclick="HeadRotation.setGender('female')"
-                                >
-                                    Female
-                                </button>
                             </div>
                         </div>
 

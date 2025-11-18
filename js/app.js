@@ -5,6 +5,7 @@ const app = {
     state: {
         ethnicity: null,
         hairType: null,
+        gender: 'male',          // Default gender
         currentView: 'rotate',   // v2.0: Default to rotate view
         currentAge: 30,          // v2.0: User's actual current age
         projectionYears: 0,      // v2.0: How many years into the future (0, 5, 10, 20)
@@ -58,6 +59,21 @@ const app = {
     selectHairType(hairType) {
         this.state.hairType = hairType;
         console.log('Selected hair type:', hairType);
+        this.showScreen('gender-screen');
+    },
+
+    /**
+     * Select gender
+     */
+    selectGender(gender) {
+        this.state.gender = gender;
+        console.log('Selected gender:', gender);
+
+        // Set gender in rotation system
+        if (window.HeadRotation) {
+            HeadRotation.state.gender = gender;
+        }
+
         this.showScreen('lifestyle1-screen');
     },
 
@@ -65,6 +81,11 @@ const app = {
      * Initialize the simulator screen
      */
     initSimulator() {
+        // Set gender in rotation system
+        if (window.HeadRotation) {
+            HeadRotation.state.gender = this.state.gender;
+        }
+
         // v2.0: Show rotation view by default
         this.switchView('rotate');
 
@@ -175,6 +196,7 @@ const app = {
             const params = {
                 ethnicity: this.state.ethnicity,
                 age: this.state.age,
+                projectionYears: this.state.projectionYears,
                 ...this.state.parameters
             };
             const result = Calculator.calculateGrayPercentage(params);
@@ -196,6 +218,7 @@ const app = {
         const params = {
             ethnicity: this.state.ethnicity,
             age: this.state.age,
+            projectionYears: this.state.projectionYears,
             ...this.state.parameters
         };
 
@@ -203,13 +226,13 @@ const app = {
 
         // Update comparison display (both old and new v2.0 inline)
         document.getElementById('gray-without').textContent = `${result.withoutElixr}%`;
-        document.getElementById('gray-with').textContent = `${result.withElixr}%`;
+        document.getElementById('gray-with').textContent = result.withElixr === 'N/A' ? result.withElixr : `${result.withElixr}%`;
 
         // v2.0: Update inline comparison boxes
         const withoutInline = document.getElementById('gray-without-inline');
         const withInline = document.getElementById('gray-with-inline');
         if (withoutInline) withoutInline.textContent = `${result.withoutElixr}%`;
-        if (withInline) withInline.textContent = `${result.withElixr}%`;
+        if (withInline) withInline.textContent = result.withElixr === 'N/A' ? result.withElixr : `${result.withElixr}%`;
 
         // Update avatar image based on current view
         if (this.state.currentView === 'rotate') {
@@ -421,18 +444,22 @@ const app = {
         const params = {
             ethnicity: this.state.ethnicity,
             age: this.state.age,
+            projectionYears: this.state.projectionYears,
             ...this.state.parameters
         };
 
         const result = Calculator.calculateGrayPercentage(params);
 
-        const shareText = `Elixr Hair Whitening Simulator Results:
+        let shareText = `Elixr Hair Whitening Simulator Results:
 
 At age ${this.state.age}:
 - Without Elixr: ${result.withoutElixr}% gray hair
-- With Elixr: ${result.withElixr}% gray hair
+- With Elixr: ${result.withElixr === 'N/A' ? 'N/A (treatment needs time to work)' : result.withElixr + '% gray hair'}
+`;
 
-Elixr reduces hair whitening by ${result.withoutElixr - result.withElixr}%!
+        if (result.withElixr !== 'N/A') {
+            shareText += `\nElixr reduces hair whitening by ${result.withoutElixr - result.withElixr}%!`;
+        }
 
 Try the simulator: ${window.location.href}`;
 
