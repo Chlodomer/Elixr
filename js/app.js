@@ -13,9 +13,9 @@ const app = {
         parameters: {
             stress: 0,           // v2.0: 0=minimal, 1=moderate, 2=extreme
             sun: 0,              // v2.0: 0=minimal, 1=moderate, 2=extreme
-            work: CONFIG.defaults.work,
-            smoking: CONFIG.defaults.smoking,
-            dyeing: CONFIG.defaults.dyeing
+            work: 0,
+            smoking: false,
+            dyeing: false
         },
         usingElixr: true         // v2.0: Always show both, but keep this for compatibility
     },
