@@ -14,7 +14,8 @@ const ROTATION_CONFIG = {
     startAngle: 0,
 
     // Drag sensitivity (pixels needed to rotate one angle step)
-    dragSensitivity: 30,
+    // v2.0: Reduced from 30 to 15 for faster, more responsive rotation
+    dragSensitivity: 15,
 
     // Rotation direction (1 = clockwise, -1 = counter-clockwise)
     rotationDirection: 1,
@@ -23,10 +24,12 @@ const ROTATION_CONFIG = {
     enableMomentum: true,
 
     // Friction for momentum decay (0-1, higher = slower decay)
-    momentumFriction: 0.92,
+    // v2.0: Reduced from 0.92 to 0.88 for snappier response
+    momentumFriction: 0.88,
 
     // Minimum velocity to trigger momentum
-    minMomentumVelocity: 0.5,
+    // v2.0: Reduced from 0.5 to 0.3 for easier momentum activation
+    minMomentumVelocity: 0.3,
 
     // Touch/Mobile support
     enableTouch: true,
