@@ -36,6 +36,15 @@ const HeadRotation = {
             return;
         }
 
+        // Initialize comparison slider
+        console.log('[Rotation] window.ComparisonSlider exists?', !!window.ComparisonSlider);
+        if (window.ComparisonSlider) {
+            console.log('[Rotation] Calling ComparisonSlider.init()');
+            ComparisonSlider.init();
+        } else {
+            console.error('[Rotation] ComparisonSlider not found!');
+        }
+
         // Set initial image
         this.updateImage();
 
@@ -77,6 +86,11 @@ const HeadRotation = {
      * Mouse drag start
      */
     onDragStart(e) {
+        // Don't start rotation drag if clicking on comparison slider handle
+        if (e.target.closest('#comparison-slider-handle')) {
+            return;
+        }
+
         this.state.isDragging = true;
         this.state.startX = e.clientX;
         this.state.lastX = e.clientX;
@@ -132,8 +146,14 @@ const HeadRotation = {
     onTouchStart(e) {
         if (e.touches.length !== 1) return;
 
-        e.preventDefault();
+        // Don't start rotation drag if touching comparison slider handle
         const touch = e.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target && target.closest('#comparison-slider-handle')) {
+            return;
+        }
+
+        e.preventDefault();
         this.state.isDragging = true;
         this.state.startX = touch.clientX;
         this.state.lastX = touch.clientX;
@@ -195,60 +215,85 @@ const HeadRotation = {
             return;
         }
 
-        // Calculate current gray percentage
-        const params = {
+        // Check if we should use comparison slider
+        console.log('[Rotation] Checking comparison mode:', {
+            hasComparisonSlider: !!window.ComparisonSlider,
             ethnicity: app.state.ethnicity,
-            age: app.state.age,
-            ...app.state.parameters
-        };
-
-        const result = Calculator.calculateGrayPercentage(params);
-        const displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
-
-        console.log('[Rotation] Updating image:', {
-            ethnicity: app.state.ethnicity,
-            hairType: app.state.hairType,
-            gender: this.state.gender,
-            angleIndex: this.state.currentAngleIndex,
-            grayPercent: displayPercent
+            hairType: app.state.hairType
         });
 
-        // Get image path
-        const imagePath = ROTATION_CONFIG.getImagePath(
-            app.state.ethnicity,
-            app.state.hairType,
-            this.state.gender,
-            this.state.currentAngleIndex,
-            displayPercent
-        );
+        const useComparison = window.ComparisonSlider &&
+                              ComparisonSlider.shouldShowComparison(app.state.ethnicity, app.state.hairType);
 
-        console.log('[Rotation] Loading image:', imagePath);
+        console.log('[Rotation] useComparison =', useComparison);
 
-        // Update image
-        this.elements.image.src = imagePath;
-        this.elements.image.alt = `${CONFIG.ethnicities[app.state.ethnicity].name} ${this.state.gender} - ${displayPercent}% gray - ${this.state.currentAngleIndex * ROTATION_CONFIG.angleStep}° view`;
+        if (useComparison) {
+            // Hide regular image, show comparison slider
+            this.elements.image.style.display = 'none';
+            ComparisonSlider.show();
+            ComparisonSlider.updateImages(this.state.currentAngleIndex);
+        } else {
+            // Show regular image, hide comparison slider
+            this.elements.image.style.display = 'block';
+            if (window.ComparisonSlider) {
+                ComparisonSlider.hide();
+            }
 
-        // Update angle display
+            // Calculate current gray percentage
+            const params = {
+                ethnicity: app.state.ethnicity,
+                age: app.state.age,
+                ...app.state.parameters
+            };
+
+            const result = Calculator.calculateGrayPercentage(params);
+            const displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
+
+            console.log('[Rotation] Updating image:', {
+                ethnicity: app.state.ethnicity,
+                hairType: app.state.hairType,
+                gender: this.state.gender,
+                angleIndex: this.state.currentAngleIndex,
+                grayPercent: displayPercent
+            });
+
+            // Get image path
+            const imagePath = ROTATION_CONFIG.getImagePath(
+                app.state.ethnicity,
+                app.state.hairType,
+                this.state.gender,
+                this.state.currentAngleIndex,
+                displayPercent
+            );
+
+            console.log('[Rotation] Loading image:', imagePath);
+
+            // Update image
+            this.elements.image.src = imagePath;
+            this.elements.image.alt = `${CONFIG.ethnicities[app.state.ethnicity].name} ${this.state.gender} - ${displayPercent}% gray - ${this.state.currentAngleIndex * ROTATION_CONFIG.angleStep}° view`;
+
+            // Handle image error (show placeholder)
+            this.elements.image.onerror = () => {
+                console.error('[Rotation] Failed to load image:', imagePath);
+                console.log('[Rotation] Showing placeholder instead');
+                this.elements.image.src = this.createPlaceholder(
+                    this.state.currentAngleIndex,
+                    displayPercent
+                );
+            };
+
+            // Log successful image load
+            this.elements.image.onload = () => {
+                console.log('[Rotation] Image loaded successfully');
+            };
+        }
+
+        // Update angle display (common for both modes)
         const angleDisplay = document.getElementById('rotation-angle-display');
         if (angleDisplay) {
             const displayAngle = this.state.currentAngleIndex * ROTATION_CONFIG.angleStep;
             angleDisplay.textContent = `${displayAngle}°`;
         }
-
-        // Handle image error (show placeholder)
-        this.elements.image.onerror = () => {
-            console.error('[Rotation] Failed to load image:', imagePath);
-            console.log('[Rotation] Showing placeholder instead');
-            this.elements.image.src = this.createPlaceholder(
-                this.state.currentAngleIndex,
-                displayPercent
-            );
-        };
-
-        // Log successful image load
-        this.elements.image.onload = () => {
-            console.log('[Rotation] Image loaded successfully');
-        };
     },
 
     /**

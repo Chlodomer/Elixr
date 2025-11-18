@@ -6,15 +6,17 @@ const app = {
         ethnicity: null,
         hairType: null,
         currentView: 'front',
-        age: CONFIG.defaults.age,
+        currentAge: 30,          // v2.0: User's actual current age
+        projectionYears: 0,      // v2.0: How many years into the future (0, 5, 10, 20)
+        age: 30,                 // Calculated: currentAge + projectionYears
         parameters: {
-            stress: CONFIG.defaults.stress,
-            sun: CONFIG.defaults.sun,
+            stress: 0,           // v2.0: 0=minimal, 1=moderate, 2=extreme
+            sun: 0,              // v2.0: 0=minimal, 1=moderate, 2=extreme
             work: CONFIG.defaults.work,
             smoking: CONFIG.defaults.smoking,
             dyeing: CONFIG.defaults.dyeing
         },
-        usingElixr: CONFIG.defaults.usingElixr
+        usingElixr: true         // v2.0: Always show both, but keep this for compatibility
     },
 
     /**
@@ -224,9 +226,15 @@ const app = {
 
         const result = Calculator.calculateGrayPercentage(params);
 
-        // Update comparison display
+        // Update comparison display (both old and new v2.0 inline)
         document.getElementById('gray-without').textContent = `${result.withoutElixr}%`;
         document.getElementById('gray-with').textContent = `${result.withElixr}%`;
+
+        // v2.0: Update inline comparison boxes
+        const withoutInline = document.getElementById('gray-without-inline');
+        const withInline = document.getElementById('gray-with-inline');
+        if (withoutInline) withoutInline.textContent = `${result.withoutElixr}%`;
+        if (withInline) withInline.textContent = `${result.withElixr}%`;
 
         // Update avatar image based on current view
         if (this.state.currentView === 'rotate') {
@@ -322,6 +330,57 @@ const app = {
             };
             this.showScreen('welcome-screen');
         }
+    },
+
+    /**
+     * v2.0: Set current age from onboarding and continue
+     */
+    setCurrentAgeAndContinue() {
+        const ageInput = document.getElementById('current-age-input');
+        this.state.currentAge = parseInt(ageInput.value) || 30;
+        this.state.age = this.state.currentAge + this.state.projectionYears;
+        console.log('Set current age:', this.state.currentAge);
+        this.showScreen('ethnicity-screen');
+    },
+
+    /**
+     * v2.0: Update time projection (0, 5, 10, or 20 years)
+     */
+    updateProjection(years) {
+        this.state.projectionYears = years;
+        this.state.age = this.state.currentAge + years;
+
+        // Update button states
+        document.querySelectorAll('.projection-btn').forEach(btn => {
+            if (parseInt(btn.dataset.years) === years) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Update current age display
+        const ageLabel = document.getElementById('current-age-display-label');
+        if (ageLabel) {
+            ageLabel.textContent = this.state.currentAge;
+        }
+
+        console.log('Projection updated:', { currentAge: this.state.currentAge, projectionYears: years, displayAge: this.state.age });
+        this.updateSimulator();
+    },
+
+    /**
+     * v2.0: Update discrete parameters (stress/sun with 3 levels)
+     */
+    updateDiscreteParameter(param, value) {
+        const intValue = parseInt(value);
+        this.state.parameters[param] = intValue;
+
+        const labels = ['Minimal', 'Moderate', 'Extreme'];
+        document.getElementById(`${param}-value`).textContent = labels[intValue];
+
+        console.log('Updated discrete parameter:', param, labels[intValue]);
+        this.updateSimulator();
     },
 
     /**

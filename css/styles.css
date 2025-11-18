@@ -1020,3 +1020,242 @@ h3:first-child {
         gap: 0.75rem;
     }
 }
+
+/* Comparison Slider Styles */
+.comparison-slider-container {
+    width: 100%;
+    height: 400px;
+    max-width: 600px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.comparison-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.comparison-image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.comparison-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+}
+
+.comparison-label {
+    position: absolute;
+    top: 1.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(26, 26, 26, 0.85);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+}
+
+.comparison-label-before {
+    left: 1.5rem;
+}
+
+.comparison-label-after {
+    right: 1.5rem;
+}
+
+.comparison-slider-handle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg,
+        rgba(70, 130, 180, 0.3) 0%,
+        rgba(70, 130, 180, 0.8) 50%,
+        rgba(70, 130, 180, 0.3) 100%
+    );
+    cursor: ew-resize;
+    z-index: 3;
+    transform: translateX(-50%);
+    transition: background 0.2s ease;
+}
+
+.comparison-slider-handle:hover {
+    background: linear-gradient(180deg,
+        rgba(70, 130, 180, 0.5) 0%,
+        rgba(70, 130, 180, 1) 50%,
+        rgba(70, 130, 180, 0.5) 100%
+    );
+}
+
+.comparison-slider-handle:hover .comparison-slider-button {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 20px rgba(70, 130, 180, 0.8),
+                0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.comparison-slider-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: rgba(70, 130, 180, 0.6);
+    transform: translateX(-50%);
+}
+
+.comparison-slider-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #3a4a5a 0%, #4a5a6a 100%);
+    border: 3px solid rgba(70, 130, 180, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ew-resize;
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.comparison-slider-button svg {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Responsive for comparison slider */
+@media (max-width: 640px) {
+    .comparison-label {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.75rem;
+        top: 1rem;
+    }
+
+    .comparison-label-before {
+        left: 1rem;
+    }
+
+    .comparison-label-after {
+        right: 1rem;
+    }
+
+    .comparison-slider-button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .comparison-slider-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Time Projection Buttons (v2.0) */
+.time-projection-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.projection-btn {
+    padding: 1rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    border: 2px solid #d0d0d0;
+    background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+    color: #4a4a4a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.projection-btn:hover {
+    border-color: #4682b4;
+    background: linear-gradient(to bottom, #f0f8ff 0%, #e6f2ff 100%);
+    box-shadow: 0 0 10px rgba(70, 130, 180, 0.2);
+}
+
+.projection-btn.active {
+    border-color: #4682b4;
+    background: linear-gradient(135deg, #4682b4 0%, #5a92c4 100%);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(70, 130, 180, 0.4);
+}
+
+/* Inline Comparison Display (v2.0) */
+.comparison-display-inline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #2a3a4a 0%, #1a1a1a 100%);
+    border-radius: 10px;
+    border: 1px solid #1a2530;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(70, 130, 180, 0.1);
+}
+
+.comparison-item-inline {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-item-inline .label {
+    display: block;
+    font-size: 0.75rem;
+    color: #b0b0b0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.comparison-item-inline .percentage {
+    display: block;
+    font-size: 2rem;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 0.25rem;
+}
+
+.comparison-item-inline .sublabel {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.comparison-item-inline.without {
+    border-left: 3px solid #c44;
+}
+
+.comparison-item-inline.with {
+    border-left: 3px solid #4682b4;
+}

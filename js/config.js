@@ -43,25 +43,21 @@ const CONFIG = {
         100: { min: 85, max: 100, name: '100' } // 85-100% gray
     },
 
-    // Lifestyle factor weights (research-based multipliers)
-    // Based on peer-reviewed studies: smoking 2.5x risk, stress ~1.35x, UV ~1.15-1.25x
-    // Each factor uses a multiplier approach: base_gray × multiplier
-    // Reference: app_data.md - comprehensive hair whitening research
+    // v2.0: Lifestyle factor weights based on peer-reviewed research from app_data.md
+    // Smoking: 2.5x risk, advances graying by several years
+    // Stress: Can shave off 3-5 years (hormones trigger melanocyte depletion)
+    // UV: Moderate effect, shifts by a few years (oxidative stress)
     factors: {
         stress: {
-            // Stress contributes 5-10% overall impact
-            // Multiplier ranges from 1.0 (no stress) to 1.35 (extreme stress)
-            minMultiplier: 1.0,
-            maxMultiplier: 1.35,  // High stress = 1.35x graying rate
-            ageShift: 2.5,         // Can advance graying by ~2.5 years
+            // v2.0: Discrete levels (0=minimal, 1=moderate, 2=extreme)
+            multipliers: [1.0, 1.20, 1.45],  // Research: chronic stress significantly accelerates
+            ageShifts: [0, 2, 4],             // Can advance by 0, 2, or 4 years
             label: 'Stress Level'
         },
         sun: {
-            // UV exposure contributes ~5% overall impact
-            // Multiplier ranges from 1.0 (minimal) to 1.25 (extreme)
-            minMultiplier: 1.0,
-            maxMultiplier: 1.25,   // Extreme UV = 1.25x graying rate
-            ageShift: 2.5,         // Can advance graying by ~2.5 years
+            // v2.0: Discrete levels (0=minimal, 1=moderate, 2=extreme)
+            multipliers: [1.0, 1.15, 1.30],  // Research: UV shifts graying earlier by a few years
+            ageShifts: [0, 1.5, 3],           // Can advance by 0, 1.5, or 3 years
             label: 'Sun Exposure'
         },
         work: {

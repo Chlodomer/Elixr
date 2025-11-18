@@ -41,12 +41,14 @@ const Calculator = {
         // Each factor can "advance" the biological age of hair
         let totalAgeShift = 0;
 
-        // Stress age shift (0-100% slider)
-        const stressShift = (params.stress / 100) * CONFIG.factors.stress.ageShift;
+        // v2.0: Stress age shift (discrete: 0=minimal, 1=moderate, 2=extreme)
+        const stressLevel = Math.min(2, Math.max(0, Math.floor(params.stress)));
+        const stressShift = CONFIG.factors.stress.ageShifts[stressLevel];
         totalAgeShift += stressShift;
 
-        // Sun/UV age shift (0-100% slider)
-        const sunShift = (params.sun / 100) * CONFIG.factors.sun.ageShift;
+        // v2.0: Sun/UV age shift (discrete: 0=minimal, 1=moderate, 2=extreme)
+        const sunLevel = Math.min(2, Math.max(0, Math.floor(params.sun)));
+        const sunShift = CONFIG.factors.sun.ageShifts[sunLevel];
         totalAgeShift += sunShift;
 
         // Work environment age shift
@@ -68,17 +70,15 @@ const Calculator = {
         let baseGray = yearsSinceStart * baseGrayingRate;
 
         // Step 4: Apply lifestyle multipliers
-        // These multiply the base graying rate (research-based)
+        // v2.0: These multiply the base graying rate (research-based from app_data.md)
         let totalMultiplier = 1.0;
 
-        // Stress multiplier (scales from 1.0 to 1.35)
-        const stressRange = CONFIG.factors.stress.maxMultiplier - CONFIG.factors.stress.minMultiplier;
-        const stressMultiplier = CONFIG.factors.stress.minMultiplier + (params.stress / 100) * stressRange;
+        // v2.0: Stress multiplier (discrete levels: 0=minimal, 1=moderate, 2=extreme)
+        const stressMultiplier = CONFIG.factors.stress.multipliers[stressLevel];
         totalMultiplier *= stressMultiplier;
 
-        // Sun/UV multiplier (scales from 1.0 to 1.25)
-        const sunRange = CONFIG.factors.sun.maxMultiplier - CONFIG.factors.sun.minMultiplier;
-        const sunMultiplier = CONFIG.factors.sun.minMultiplier + (params.sun / 100) * sunRange;
+        // v2.0: Sun/UV multiplier (discrete levels: 0=minimal, 1=moderate, 2=extreme)
+        const sunMultiplier = CONFIG.factors.sun.multipliers[sunLevel];
         totalMultiplier *= sunMultiplier;
 
         // Work environment multiplier

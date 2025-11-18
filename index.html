@@ -33,16 +33,32 @@
             </p>
             <ul class="feature-list">
                 <li>Select your ethnic background and hair type for personalized projections</li>
-                <li>Visualize how your hair may change from age 20 to 80</li>
+                <li>See how your hair may change in 5, 10, or 20 years</li>
                 <li>Adjust lifestyle factors such as stress, sun exposure, and smoking to see their impact</li>
                 <li>Compare natural progression with Elixr treatment effects</li>
-                <li>View results from multiple angles: front, top, and back</li>
+                <li>View results from multiple angles with 360° rotation</li>
             </ul>
+
+            <div class="age-input-group" style="margin-top: 2rem;">
+                <label for="current-age-input" style="display: block; font-size: 1.125rem; color: #4a4a4a; margin-bottom: 1rem; font-weight: 400;">
+                    What is your current age?
+                </label>
+                <input
+                    type="number"
+                    id="current-age-input"
+                    min="20"
+                    max="80"
+                    value="30"
+                    style="width: 120px; padding: 0.75rem; font-size: 1.25rem; text-align: center; border: 2px solid #d0d0d0; border-radius: 6px; font-weight: 500;"
+                >
+                <span style="margin-left: 0.5rem; color: #666;">years</span>
+            </div>
+
             <p class="help-text" style="margin-top: 2rem; font-style: italic;">
                 Note: Projections are based on population averages and scientific research.
                 Individual results may vary.
             </p>
-            <button class="btn-primary" onclick="app.showScreen('ethnicity-screen')">
+            <button class="btn-primary" onclick="app.setCurrentAgeAndContinue()">
                 Continue
             </button>
         </div>
@@ -148,7 +164,32 @@
                     <!-- Rotation Container -->
                     <div class="avatar-display" id="rotation-view" style="display: none;">
                         <div id="rotation-container" class="rotation-container">
-                            <img id="rotation-image" src="" alt="Rotating Avatar">
+                            <!-- Normal single image view -->
+                            <img id="rotation-image" src="" alt="Rotating Avatar" style="display: block;">
+
+                            <!-- Comparison slider view -->
+                            <div id="comparison-slider-container" class="comparison-slider-container" style="display: none;">
+                                <div class="comparison-slider">
+                                    <div class="comparison-image-wrapper">
+                                        <img id="comparison-before-image" class="comparison-image" src="" alt="Without Treatment">
+                                        <div class="comparison-label comparison-label-before">Without Treatment</div>
+                                    </div>
+                                    <div class="comparison-image-wrapper comparison-after" id="comparison-after-wrapper">
+                                        <img id="comparison-after-image" class="comparison-image" src="" alt="With Treatment">
+                                        <div class="comparison-label comparison-label-after">With Treatment</div>
+                                    </div>
+                                    <div class="comparison-slider-handle" id="comparison-slider-handle">
+                                        <div class="comparison-slider-line"></div>
+                                        <div class="comparison-slider-button">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                                <path d="M15 18l-6-6 6-6"/>
+                                                <path d="M9 18l6-6-6-6"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="rotation-overlay">
                                 <span id="rotation-angle-display">0°</span>
                             </div>
@@ -189,7 +230,8 @@
                             <span id="preload-progress-text" class="preload-progress-text">Loading images...</span>
                         </div>
                     </div>
-                    <div class="comparison-display">
+                    <!-- Old comparison display hidden - now shown inline in controls -->
+                    <div class="comparison-display" style="display: none;">
                         <div class="comparison-item without">
                             <span class="label">Without Elixr</span>
                             <span class="percentage" id="gray-without">0%</span>
@@ -206,23 +248,52 @@
                 <!-- Right: Controls -->
                 <div class="controls-section">
                     <div class="control-panel">
-                        <h3>Timeline</h3>
-                        <div class="control-group">
-                            <label for="age-slider">
-                                Age: <span id="age-value">30</span> years
-                            </label>
-                            <input
-                                type="range"
-                                id="age-slider"
-                                min="20"
-                                max="80"
-                                value="30"
-                                oninput="app.updateAge(this.value)"
+                        <h3>Your Projection</h3>
+                        <p class="help-text" style="margin-bottom: 1.5rem;">
+                            Current Age: <span id="current-age-display-label" style="font-weight: 500;">30</span> years
+                        </p>
+                        <div class="time-projection-buttons">
+                            <button
+                                class="projection-btn active"
+                                data-years="0"
+                                onclick="app.updateProjection(0)"
                             >
-                            <div class="slider-labels">
-                                <span>20</span>
-                                <span>50</span>
-                                <span>80</span>
+                                Now
+                            </button>
+                            <button
+                                class="projection-btn"
+                                data-years="5"
+                                onclick="app.updateProjection(5)"
+                            >
+                                In 5 Years
+                            </button>
+                            <button
+                                class="projection-btn"
+                                data-years="10"
+                                onclick="app.updateProjection(10)"
+                            >
+                                In 10 Years
+                            </button>
+                            <button
+                                class="projection-btn"
+                                data-years="20"
+                                onclick="app.updateProjection(20)"
+                            >
+                                In 20 Years
+                            </button>
+                        </div>
+
+                        <!-- Comparison Display moved here -->
+                        <div class="comparison-display-inline">
+                            <div class="comparison-item-inline without">
+                                <span class="label">Without Elixr</span>
+                                <span class="percentage" id="gray-without-inline">0%</span>
+                                <span class="sublabel">gray hair</span>
+                            </div>
+                            <div class="comparison-item-inline with">
+                                <span class="label">With Elixr</span>
+                                <span class="percentage" id="gray-with-inline">0%</span>
+                                <span class="sublabel">gray hair</span>
                             </div>
                         </div>
 
@@ -230,16 +301,17 @@
                         <p class="help-text">Adjust factors that influence hair whitening</p>
 
                         <div class="control-group">
-                            <label for="stress-slider">
-                                Stress Level: <span id="stress-value">0%</span>
+                            <label>
+                                Stress Level: <span id="stress-value">Minimal</span>
                             </label>
                             <input
                                 type="range"
                                 id="stress-slider"
                                 min="0"
-                                max="100"
+                                max="2"
+                                step="1"
                                 value="0"
-                                oninput="app.updateParameter('stress', this.value)"
+                                oninput="app.updateDiscreteParameter('stress', this.value)"
                             >
                             <div class="slider-labels">
                                 <span>Minimal</span>
@@ -249,16 +321,17 @@
                         </div>
 
                         <div class="control-group">
-                            <label for="sun-slider">
-                                Sun Exposure: <span id="sun-value">0%</span>
+                            <label>
+                                Sun Exposure: <span id="sun-value">Minimal</span>
                             </label>
                             <input
                                 type="range"
                                 id="sun-slider"
                                 min="0"
-                                max="100"
+                                max="2"
+                                step="1"
                                 value="0"
-                                oninput="app.updateParameter('sun', this.value)"
+                                oninput="app.updateDiscreteParameter('sun', this.value)"
                             >
                             <div class="slider-labels">
                                 <span>Minimal</span>
@@ -316,30 +389,6 @@
                             </label>
                         </div>
 
-                        <div class="elixr-toggle">
-                            <h3>Using Elixr Treatment?</h3>
-                            <div class="toggle-buttons">
-                                <button
-                                    class="toggle-btn"
-                                    id="elixr-no"
-                                    onclick="app.toggleElixr(false)"
-                                >
-                                    NO
-                                </button>
-                                <button
-                                    class="toggle-btn active"
-                                    id="elixr-yes"
-                                    onclick="app.toggleElixr(true)"
-                                >
-                                    YES
-                                </button>
-                            </div>
-                            <p class="elixr-info">
-                                Clinical studies show Elixr can slow hair whitening by up to 70%
-                                and reverse existing gray by 15-20%.
-                            </p>
-                        </div>
-
                         <button class="btn-primary btn-full" onclick="app.shareResults()">
                             Share Results
                         </button>
@@ -354,6 +403,7 @@
     <script src="js/calculator.js"></script>
     <script src="js/rotation-config.js"></script>
     <script src="js/image-preloader.js"></script>
+    <script src="js/comparison-slider.js"></script>
     <script src="js/rotation.js"></script>
     <script src="js/app.js"></script>
 </body>
