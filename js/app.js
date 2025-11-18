@@ -5,7 +5,7 @@ const app = {
     state: {
         ethnicity: null,
         hairType: null,
-        currentView: 'front',
+        currentView: 'rotate',   // v2.0: Default to rotate view
         currentAge: 30,          // v2.0: User's actual current age
         projectionYears: 0,      // v2.0: How many years into the future (0, 5, 10, 20)
         age: 30,                 // Calculated: currentAge + projectionYears
@@ -66,18 +66,8 @@ const app = {
      * Initialize the simulator screen
      */
     initSimulator() {
-        // Set initial age
-        document.getElementById('age-slider').value = this.state.age;
-        document.getElementById('age-value').textContent = this.state.age;
-
-        // Set initial slider values
-        document.getElementById('stress-slider').value = this.state.parameters.stress;
-        document.getElementById('stress-value').textContent = `${this.state.parameters.stress}%`;
-        document.getElementById('sun-slider').value = this.state.parameters.sun;
-        document.getElementById('sun-value').textContent = `${this.state.parameters.sun}%`;
-
-        // Set Elixr toggle
-        this.updateElixrToggle();
+        // v2.0: Show rotation view by default
+        this.switchView('rotate');
 
         // Update display
         this.updateSimulator();
@@ -160,56 +150,42 @@ const app = {
     },
 
     /**
-     * Switch avatar view
+     * Switch avatar view (v2.0: only rotation view)
      */
     switchView(view) {
-        this.state.currentView = view;
+        this.state.currentView = 'rotate';
 
-        // Update tab states
+        // Update tab state
         document.querySelectorAll('.view-tab').forEach(tab => {
-            tab.classList.remove('active');
+            tab.classList.add('active');
         });
-        document.querySelector(`[data-view="${view}"]`).classList.add('active');
 
-        // Toggle between static and rotation views
-        const staticView = document.getElementById('static-view');
+        // Show rotation view
         const rotationView = document.getElementById('rotation-view');
+        rotationView.style.display = 'block';
 
-        if (view === 'rotate') {
-            // Show rotation view
-            staticView.style.display = 'none';
-            rotationView.style.display = 'block';
-
-            // Initialize rotation if not already initialized
-            if (!HeadRotation.elements.container) {
-                HeadRotation.init('rotation-container');
-            } else {
-                HeadRotation.updateImage();
-            }
-
-            // Preload rotation images
-            if (ROTATION_CONFIG.preloadImages && window.ImagePreloader) {
-                const params = {
-                    ethnicity: this.state.ethnicity,
-                    age: this.state.age,
-                    ...this.state.parameters
-                };
-                const result = Calculator.calculateGrayPercentage(params);
-                const displayPercent = this.state.usingElixr ? result.withElixr : result.withoutElixr;
-
-                ImagePreloader.preloadCurrentSet(
-                    this.state.ethnicity,
-                    this.state.hairType,
-                    displayPercent
-                );
-            }
+        // Initialize rotation if not already initialized
+        if (!window.HeadRotation || !HeadRotation.elements.container) {
+            HeadRotation.init('rotation-container');
         } else {
-            // Show static view
-            staticView.style.display = 'block';
-            rotationView.style.display = 'none';
+            HeadRotation.updateImage();
+        }
 
-            // Update avatar image for static views
-            this.updateAvatarImage();
+        // Preload rotation images
+        if (ROTATION_CONFIG.preloadImages && window.ImagePreloader) {
+            const params = {
+                ethnicity: this.state.ethnicity,
+                age: this.state.age,
+                ...this.state.parameters
+            };
+            const result = Calculator.calculateGrayPercentage(params);
+            const displayPercent = this.state.usingElixr ? result.withElixr : result.withoutElixr;
+
+            ImagePreloader.preloadCurrentSet(
+                this.state.ethnicity,
+                this.state.hairType,
+                displayPercent
+            );
         }
     },
 

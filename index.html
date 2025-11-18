@@ -141,24 +141,9 @@
                 <!-- Left: Avatar Display -->
                 <div class="avatar-section">
                     <div class="view-tabs">
-                        <button class="view-tab active" data-view="front" onclick="app.switchView('front')">
-                            Front
-                        </button>
-                        <button class="view-tab" data-view="top" onclick="app.switchView('top')">
-                            Top
-                        </button>
-                        <button class="view-tab" data-view="back" onclick="app.switchView('back')">
-                            Back
-                        </button>
-                        <button class="view-tab" data-view="rotate" onclick="app.switchView('rotate')">
+                        <button class="view-tab active single-tab" data-view="rotate" onclick="app.switchView('rotate')">
                             360° Rotate
                         </button>
-                    </div>
-                    <div class="avatar-display" id="static-view">
-                        <img id="avatar-image" src="" alt="Avatar">
-                        <div class="avatar-overlay">
-                            <span id="current-age-display">Age: 30</span>
-                        </div>
                     </div>
 
                     <!-- Rotation Container -->

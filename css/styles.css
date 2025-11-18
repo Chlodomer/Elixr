@@ -476,6 +476,15 @@ h3:first-child {
     box-shadow: 0 0 10px rgba(70, 130, 180, 0.15);
 }
 
+/* v2.0: Single tab styling (centered and expanded) */
+.view-tab.single-tab {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-size: 1rem;
+}
+
 .avatar-display {
     position: relative;
     background: linear-gradient(to bottom, #fefefe 0%, #f9f9f9 100%);
