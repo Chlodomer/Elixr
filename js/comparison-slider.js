@@ -2,6 +2,9 @@
 console.log('[ComparisonSlider] Script loaded');
 
 const ComparisonSlider = {
+    // Available angles for comparison images (must match actual image files)
+    availableAngles: [0, 30, 60, 90, 180, 270, 330],
+
     // Current state
     state: {
         isActive: false,           // Is comparison mode active
@@ -190,6 +193,28 @@ const ComparisonSlider = {
     },
 
     /**
+     * Get the closest available angle for a given rotation angle index
+     */
+    getClosestAvailableAngle(angleIndex) {
+        // Calculate the actual rotation angle from the index
+        const rotationAngle = angleIndex * ROTATION_CONFIG.angleStep;
+
+        // Find the closest available angle
+        let closestAngle = this.availableAngles[0];
+        let minDiff = Math.abs(rotationAngle - closestAngle);
+
+        for (const angle of this.availableAngles) {
+            const diff = Math.abs(rotationAngle - angle);
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestAngle = angle;
+            }
+        }
+
+        return closestAngle;
+    },
+
+    /**
      * Update comparison images for specific angle
      */
     updateImages(angleIndex) {
@@ -197,8 +222,8 @@ const ComparisonSlider = {
 
         this.state.currentAngleIndex = angleIndex;
 
-        // Get the actual angle from the index
-        const angle = angleIndex * ROTATION_CONFIG.angleStep;
+        // Get the closest available angle
+        const angle = this.getClosestAvailableAngle(angleIndex);
 
         // Path to dark (without treatment) images
         const darkPath = `40yo caucasian dark/${angle}.png`;
@@ -207,7 +232,9 @@ const ComparisonSlider = {
         const silverPath = `40yo caucasian silver/${angle}.png`;
 
         console.log('[ComparisonSlider] Updating images:', {
-            angle: angle,
+            angleIndex: angleIndex,
+            rotationAngle: angleIndex * ROTATION_CONFIG.angleStep,
+            closestAvailableAngle: angle,
             darkPath: darkPath,
             silverPath: silverPath
         });
