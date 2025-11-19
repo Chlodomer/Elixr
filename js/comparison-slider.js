@@ -154,20 +154,14 @@ const ComparisonSlider = {
         // Update handle position
         this.elements.sliderHandle.style.left = `${percentage}%`;
 
-        // Apply clip-path directly to images, not wrappers
-        // Before image (with Elixr): show left side (clip from right)
-        const beforeClipPath = `inset(0 ${100 - percentage}% 0 0)`;
-        // After image (without Elixr): show right side (clip from left)
-        const afterClipPath = `inset(0 0 0 ${percentage}%)`;
+        // Reveal effect using clip-path on the wrappers
+        if (this.elements.beforeWrapper && this.elements.afterWrapper) {
+            const beforeClipPath = `inset(0 ${100 - percentage}% 0 0)`; // show left portion
+            const afterClipPath = `inset(0 0 0 ${percentage}%)`;       // show right portion
 
-        console.log('[ComparisonSlider] Setting beforeImage clipPath to:', beforeClipPath);
-        console.log('[ComparisonSlider] Setting afterImage clipPath to:', afterClipPath);
-
-        this.elements.beforeImage.style.clipPath = beforeClipPath;
-        this.elements.afterImage.style.clipPath = afterClipPath;
-
-        console.log('[ComparisonSlider] Actual beforeImage clipPath:', this.elements.beforeImage.style.clipPath);
-        console.log('[ComparisonSlider] Actual afterImage clipPath:', this.elements.afterImage.style.clipPath);
+            this.elements.beforeWrapper.style.clipPath = beforeClipPath;
+            this.elements.afterWrapper.style.clipPath = afterClipPath;
+        }
     },
 
     /**
@@ -194,6 +188,15 @@ const ComparisonSlider = {
 
         this.state.isActive = true;
         this.elements.container.style.display = 'flex';
+
+        // Hide rotation instructions and base image visually while comparison is active
+        const instructions = document.querySelector('.rotation-instructions');
+        if (instructions) {
+            instructions.style.display = 'none';
+        }
+        if (window.HeadRotation && HeadRotation.elements && HeadRotation.elements.image) {
+            HeadRotation.elements.image.style.opacity = '0';
+        }
 
         console.log('[ComparisonSlider] Showing comparison:', {
             withElixr: withElixrPath,
@@ -242,6 +245,15 @@ const ComparisonSlider = {
         this.state.isActive = false;
         this.elements.container.style.display = 'none';
         console.log('Comparison slider hidden');
+
+        // Restore rotation instructions and base image visibility
+        const instructions = document.querySelector('.rotation-instructions');
+        if (instructions) {
+            instructions.style.display = '';
+        }
+        if (window.HeadRotation && HeadRotation.elements && HeadRotation.elements.image) {
+            HeadRotation.elements.image.style.opacity = '1';
+        }
     },
 
     /**

@@ -23,7 +23,10 @@ Simply visit the [live demo](https://chlodomer.github.io/Elixr/)
 ### Core Functionality
 - **3 Ethnicity Options**: Caucasian, African American, Middle Eastern/Asian
 - **4 Hair Types**: Straight Short, Straight Long, Curly Short, Curly Long
-- **Multiple Views**: Front, Top, and Back views of the head
+- **Interactive 3D Head Rotation**:
+  - Front, Top, and Back views with smooth 90° rotation animations
+  - Synchronized rotation across all comparison views
+  - Click-to-rotate interface with elegant transitions
 - **Interactive Parameters**:
   - Age slider (20-80 years) with real-time updates
   - Stress level (0-100% continuous slider)
@@ -31,7 +34,11 @@ Simply visit the [live demo](https://chlodomer.github.io/Elixr/)
   - Work environment (Indoor/Office, Outdoor, Chemical Exposure)
   - Smoking status
   - Hair dyeing status
-- **Elixr Comparison**: Side-by-side comparison with and without Elixr treatment
+- **Advanced Time Projections**:
+  - Current state visualization
+  - 10-year projection with interactive comparison slider
+  - 20-year projection with interactive comparison slider
+  - Drag-to-compare interface showing with/without Elixr treatment side-by-side
 - **Real-time Updates**: Calculations update instantly as you adjust parameters
 
 ### Design Features
@@ -45,6 +52,8 @@ Simply visit the [live demo](https://chlodomer.github.io/Elixr/)
   - Custom work environment button group
   - Rounded square slider toggles (3px border-radius)
   - Blue glow hover effects on all interactive elements
+  - Interactive comparison slider with smooth drag functionality
+  - 3D rotation controls with visual feedback
 - **Onboarding Flow**: Educational screen explaining the simulator's features
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
@@ -53,6 +62,11 @@ Simply visit the [live demo](https://chlodomer.github.io/Elixr/)
 - **Frontend**: Pure HTML5, CSS3, and Vanilla JavaScript
 - **No Dependencies**: Zero frameworks, zero build process
 - **Static Site**: GitHub Pages compatible
+- **Advanced Features**:
+  - Custom comparison slider with drag-and-reveal functionality
+  - CSS clip-path for smooth visual transitions
+  - Transform-based 3D rotation animations
+  - Real-time percentage calculations
 - **Responsive Design**: Mobile and desktop optimized
 - **Browser Compatibility**: Modern browsers (Chrome, Firefox, Safari, Edge)
 
@@ -213,11 +227,13 @@ stress: {
 /
 ├── index.html              # Main HTML file
 ├── css/
-│   └── styles.css         # All styling
+│   └── styles.css         # All styling including comparison slider styles
 ├── js/
 │   ├── config.js          # Configuration and data
 │   ├── calculator.js      # Whitening calculation logic
-│   └── app.js             # Main application logic
+│   ├── app.js             # Main application logic
+│   ├── comparison-slider.js  # Interactive comparison slider functionality
+│   └── rotation.js        # 3D head rotation logic
 ├── images/                # Avatar images (180 files)
 │   ├── caucasian/
 │   ├── african-american/

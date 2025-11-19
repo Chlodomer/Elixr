@@ -523,8 +523,9 @@ h3:first-child {
 }
 
 .avatar-display img {
-    max-width: 100%;
-    max-height: 400px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     border-radius: 8px;
     filter: grayscale(0.15);
 }
@@ -1064,7 +1065,7 @@ h3:first-child {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
+    background: #ffffff;
     overflow: hidden;
     z-index: 2;
 }
@@ -1084,7 +1085,10 @@ h3:first-child {
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .comparison-image-wrapper:first-child {
@@ -1096,15 +1100,10 @@ h3:first-child {
 }
 
 .comparison-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
     width: auto;
     height: auto;
-    object-fit: contain;
     display: block;
     user-select: none;
     pointer-events: none;

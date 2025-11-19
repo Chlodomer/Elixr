@@ -242,13 +242,22 @@ const HeadRotation = {
 
         // At 10 or 20 years, show comparison slider
         if (years === 10 || years === 20) {
-            this.elements.image.style.display = 'none';
+            // Keep base image in the flow so the container has height
+            this.elements.image.style.display = 'block';
 
             if (window.ComparisonSlider) {
-                // With Elixr: silver hair (reduced graying)
-                // Without Elixr: white hair (natural progression)
-                const withElixrFolder = '40yo caucasian silver';
-                const withoutElixrFolder = '40yo caucasian white';
+                let withElixrFolder;
+                let withoutElixrFolder;
+
+                if (years === 10) {
+                    // 10 years projection: Dark (Now) vs Silver (10y)
+                    withElixrFolder = '40yo caucasian dark';
+                    withoutElixrFolder = '40yo caucasian silver';
+                } else {
+                    // 20 years projection: Silver (With Elixr) vs White (Without Elixr)
+                    withElixrFolder = '40yo caucasian silver';
+                    withoutElixrFolder = '40yo caucasian white';
+                }
 
                 this.tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, this.state.currentAngleIndex, 0);
             }
