@@ -32,10 +32,10 @@ const ComparisonSlider = {
         // Get DOM references
         this.elements.container = document.getElementById('comparison-slider-container');
         this.elements.sliderHandle = document.getElementById('comparison-slider-handle');
-        this.elements.beforeWrapper = document.querySelector('.comparison-image-wrapper:first-child');
-        this.elements.afterWrapper = document.getElementById('comparison-after-wrapper');
         this.elements.beforeImage = document.getElementById('comparison-before-image');
         this.elements.afterImage = document.getElementById('comparison-after-image');
+        this.elements.beforeWrapper = this.elements.beforeImage?.parentElement;
+        this.elements.afterWrapper = this.elements.afterImage?.parentElement;
 
         if (!this.elements.container || !this.elements.sliderHandle) {
             console.error('Comparison slider elements not found');
@@ -149,21 +149,44 @@ const ComparisonSlider = {
     updateSliderUI() {
         const percentage = this.state.sliderPosition;
 
+        console.log('[ComparisonSlider] updateSliderUI called with percentage:', percentage);
+        console.log('[ComparisonSlider] beforeWrapper element:', this.elements.beforeWrapper);
+        console.log('[ComparisonSlider] afterWrapper element:', this.elements.afterWrapper);
+
         // Update handle position
         this.elements.sliderHandle.style.left = `${percentage}%`;
 
         // Update clip paths on both wrappers
         // Before wrapper: show left side (clip from right)
-        this.elements.beforeWrapper.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+        const beforeClipPath = `inset(0 ${100 - percentage}% 0 0)`;
+        const afterClipPath = `inset(0 0 0 ${percentage}%)`;
 
-        // After wrapper: show right side (clip from left)
-        this.elements.afterWrapper.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+        console.log('[ComparisonSlider] Setting beforeWrapper clipPath to:', beforeClipPath);
+        console.log('[ComparisonSlider] Setting afterWrapper clipPath to:', afterClipPath);
+
+        this.elements.beforeWrapper.style.clipPath = beforeClipPath;
+        this.elements.afterWrapper.style.clipPath = afterClipPath;
+
+        console.log('[ComparisonSlider] Actual beforeWrapper clipPath:', this.elements.beforeWrapper.style.clipPath);
+        console.log('[ComparisonSlider] Actual afterWrapper clipPath:', this.elements.afterWrapper.style.clipPath);
     },
 
     /**
      * Show comparison slider mode with specific images
      */
     show(withElixrPath, withoutElixrPath, angle) {
+        console.log('[ComparisonSlider] show() called');
+        console.log('[ComparisonSlider] Elements check:', {
+            container: !!this.elements.container,
+            beforeImage: !!this.elements.beforeImage,
+            afterImage: !!this.elements.afterImage
+        });
+
+        if (!this.elements.container || !this.elements.beforeImage || !this.elements.afterImage) {
+            console.error('[ComparisonSlider] Elements not initialized! Calling init()...');
+            this.init();
+        }
+
         this.state.isActive = true;
         this.elements.container.style.display = 'flex';
 
@@ -189,10 +212,22 @@ const ComparisonSlider = {
             console.error('[ComparisonSlider] Failed to load without Elixr image:', withoutElixrPath);
         };
 
+        // Log when images successfully load
+        this.elements.beforeImage.onload = () => {
+            console.log('[ComparisonSlider] With Elixr image loaded successfully');
+        };
+
+        this.elements.afterImage.onload = () => {
+            console.log('[ComparisonSlider] Without Elixr image loaded successfully');
+        };
+
+        // Reset to center position first
+        this.state.sliderPosition = 50;
+
         // Ensure slider UI is properly initialized
         this.updateSliderUI();
 
-        console.log('Comparison slider shown');
+        console.log('Comparison slider shown, container display:', this.elements.container.style.display);
     },
 
     /**
