@@ -235,7 +235,7 @@ const HeadRotation = {
                 ComparisonSlider.hide();
             }
             this.elements.image.style.display = 'block';
-            const folderName = '40yo%20caucasian%20dark';
+            const folderName = '40yo caucasian dark';
             this.tryLoadImageAtAngle(folderName, this.state.currentAngleIndex, 0);
             return;
         }
@@ -247,8 +247,8 @@ const HeadRotation = {
             if (window.ComparisonSlider) {
                 // With Elixr: silver hair (reduced graying)
                 // Without Elixr: white hair (natural progression)
-                const withElixrFolder = '40yo%20caucasian%20silver';
-                const withoutElixrFolder = '40yo%20caucasian%20white';
+                const withElixrFolder = '40yo caucasian silver';
+                const withoutElixrFolder = '40yo caucasian white';
 
                 this.tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, this.state.currentAngleIndex, 0);
             }
@@ -260,7 +260,7 @@ const HeadRotation = {
             ComparisonSlider.hide();
         }
         this.elements.image.style.display = 'block';
-        this.tryLoadImageAtAngle('40yo%20caucasian%20dark', this.state.currentAngleIndex, 0);
+        this.tryLoadImageAtAngle('40yo caucasian dark', this.state.currentAngleIndex, 0);
     },
 
     /**

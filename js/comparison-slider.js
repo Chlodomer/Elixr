@@ -150,25 +150,24 @@ const ComparisonSlider = {
         const percentage = this.state.sliderPosition;
 
         console.log('[ComparisonSlider] updateSliderUI called with percentage:', percentage);
-        console.log('[ComparisonSlider] beforeWrapper element:', this.elements.beforeWrapper);
-        console.log('[ComparisonSlider] afterWrapper element:', this.elements.afterWrapper);
 
         // Update handle position
         this.elements.sliderHandle.style.left = `${percentage}%`;
 
-        // Update clip paths on both wrappers
-        // Before wrapper: show left side (clip from right)
+        // Apply clip-path directly to images, not wrappers
+        // Before image (with Elixr): show left side (clip from right)
         const beforeClipPath = `inset(0 ${100 - percentage}% 0 0)`;
+        // After image (without Elixr): show right side (clip from left)
         const afterClipPath = `inset(0 0 0 ${percentage}%)`;
 
-        console.log('[ComparisonSlider] Setting beforeWrapper clipPath to:', beforeClipPath);
-        console.log('[ComparisonSlider] Setting afterWrapper clipPath to:', afterClipPath);
+        console.log('[ComparisonSlider] Setting beforeImage clipPath to:', beforeClipPath);
+        console.log('[ComparisonSlider] Setting afterImage clipPath to:', afterClipPath);
 
-        this.elements.beforeWrapper.style.clipPath = beforeClipPath;
-        this.elements.afterWrapper.style.clipPath = afterClipPath;
+        this.elements.beforeImage.style.clipPath = beforeClipPath;
+        this.elements.afterImage.style.clipPath = afterClipPath;
 
-        console.log('[ComparisonSlider] Actual beforeWrapper clipPath:', this.elements.beforeWrapper.style.clipPath);
-        console.log('[ComparisonSlider] Actual afterWrapper clipPath:', this.elements.afterWrapper.style.clipPath);
+        console.log('[ComparisonSlider] Actual beforeImage clipPath:', this.elements.beforeImage.style.clipPath);
+        console.log('[ComparisonSlider] Actual afterImage clipPath:', this.elements.afterImage.style.clipPath);
     },
 
     /**
