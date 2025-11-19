@@ -161,13 +161,37 @@ const ComparisonSlider = {
     },
 
     /**
-     * Show comparison slider mode
+     * Show comparison slider mode with specific images
      */
-    show() {
+    show(withElixrPath, withoutElixrPath, angle) {
         this.state.isActive = true;
         this.elements.container.style.display = 'flex';
+
+        console.log('[ComparisonSlider] Showing comparison:', {
+            withElixr: withElixrPath,
+            withoutElixr: withoutElixrPath,
+            angle: angle
+        });
+
+        // Update images
+        this.elements.beforeImage.src = withElixrPath;
+        this.elements.beforeImage.alt = `With Elixr - ${angle}° view`;
+
+        this.elements.afterImage.src = withoutElixrPath;
+        this.elements.afterImage.alt = `Without Elixr - ${angle}° view`;
+
+        // Handle image errors
+        this.elements.beforeImage.onerror = () => {
+            console.error('[ComparisonSlider] Failed to load with Elixr image:', withElixrPath);
+        };
+
+        this.elements.afterImage.onerror = () => {
+            console.error('[ComparisonSlider] Failed to load without Elixr image:', withoutElixrPath);
+        };
+
         // Ensure slider UI is properly initialized
         this.updateSliderUI();
+
         console.log('Comparison slider shown');
     },
 

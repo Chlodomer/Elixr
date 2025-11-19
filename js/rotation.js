@@ -222,28 +222,104 @@ const HeadRotation = {
             return;
         }
 
-        // CLEAN IMPLEMENTATION:
-        // 0 years (Now) -> dark images
-        // 10 years -> silver images
-        // 20 years -> white images
-        // No comparison slider
+        // COMPARISON SLIDER IMPLEMENTATION:
+        // 0 years (Now) -> dark images only (no comparison)
+        // 10 years -> comparison: silver (with Elixr) vs white (without Elixr)
+        // 20 years -> comparison: silver (with Elixr) vs white (without Elixr)
 
-        // Hide comparison slider
+        const years = app.state.projectionYears;
+
+        // At "Now" (0 years), show single dark image - no comparison
+        if (years === 0) {
+            if (window.ComparisonSlider) {
+                ComparisonSlider.hide();
+            }
+            this.elements.image.style.display = 'block';
+            const folderName = '40yo%20caucasian%20dark';
+            this.tryLoadImageAtAngle(folderName, this.state.currentAngleIndex, 0);
+            return;
+        }
+
+        // At 10 or 20 years, show comparison slider
+        if (years === 10 || years === 20) {
+            this.elements.image.style.display = 'none';
+
+            if (window.ComparisonSlider) {
+                // With Elixr: silver hair (reduced graying)
+                // Without Elixr: white hair (natural progression)
+                const withElixrFolder = '40yo%20caucasian%20silver';
+                const withoutElixrFolder = '40yo%20caucasian%20white';
+
+                this.tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, this.state.currentAngleIndex, 0);
+            }
+            return;
+        }
+
+        // Fallback for any other projection years
         if (window.ComparisonSlider) {
             ComparisonSlider.hide();
         }
         this.elements.image.style.display = 'block';
+        this.tryLoadImageAtAngle('40yo%20caucasian%20dark', this.state.currentAngleIndex, 0);
+    },
 
-        // Determine folder based on projection years
-        let folderName = '40yo%20caucasian%20dark'; // Default: Now (0 years)
-        if (app.state.projectionYears === 10) {
-            folderName = '40yo%20caucasian%20silver';
-        } else if (app.state.projectionYears === 20) {
-            folderName = '40yo%20caucasian%20white';
+    /**
+     * Try to load comparison images at a specific angle, skip to next if not found
+     */
+    tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, angleIndex, attempts) {
+        // Prevent infinite loop - max 24 attempts (full circle)
+        if (attempts >= ROTATION_CONFIG.totalAngles) {
+            console.error('[Rotation] No comparison images found');
+            return;
         }
 
-        // Try to load the image at the current angle
-        this.tryLoadImageAtAngle(folderName, this.state.currentAngleIndex, 0);
+        const angle = angleIndex * ROTATION_CONFIG.angleStep;
+        const withElixrPath = `${withElixrFolder}/${angle}.png`;
+        const withoutElixrPath = `${withoutElixrFolder}/${angle}.png`;
+
+        console.log(`[Rotation] Trying comparison at ${angle}° (attempt ${attempts + 1})`);
+
+        // Test if both images exist
+        const testWithElixr = new Image();
+        const testWithoutElixr = new Image();
+        let withElixrLoaded = false;
+        let withoutElixrLoaded = false;
+
+        const checkBothLoaded = () => {
+            if (withElixrLoaded && withoutElixrLoaded) {
+                // Both images loaded successfully, show comparison slider
+                if (window.ComparisonSlider) {
+                    ComparisonSlider.show(withElixrPath, withoutElixrPath, angle);
+                }
+            }
+        };
+
+        testWithElixr.onload = () => {
+            withElixrLoaded = true;
+            checkBothLoaded();
+        };
+
+        testWithElixr.onerror = () => {
+            // With Elixr image failed, try next angle
+            console.log(`[Rotation] Missing with Elixr at ${angle}°, trying next...`);
+            const nextAngleIndex = (angleIndex + 1) % ROTATION_CONFIG.totalAngles;
+            this.tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, nextAngleIndex, attempts + 1);
+        };
+
+        testWithoutElixr.onload = () => {
+            withoutElixrLoaded = true;
+            checkBothLoaded();
+        };
+
+        testWithoutElixr.onerror = () => {
+            // Without Elixr image failed, try next angle
+            console.log(`[Rotation] Missing without Elixr at ${angle}°, trying next...`);
+            const nextAngleIndex = (angleIndex + 1) % ROTATION_CONFIG.totalAngles;
+            this.tryLoadComparisonImages(withElixrFolder, withoutElixrFolder, nextAngleIndex, attempts + 1);
+        };
+
+        testWithElixr.src = withElixrPath;
+        testWithoutElixr.src = withoutElixrPath;
     },
 
     /**
