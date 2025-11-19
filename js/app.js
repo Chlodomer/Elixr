@@ -365,11 +365,21 @@ const app = {
 
         console.log('Projection updated:', { currentAge: this.state.currentAge, projectionYears: years, displayAge: this.state.age });
 
-        // Explicitly update rotation view to show/hide comparison slider immediately
-        if (window.HeadRotation && HeadRotation.elements.container) {
+        // Make sure rotation view is visible and initialized
+        const rotationView = document.getElementById('rotation-view');
+        if (rotationView) {
+            rotationView.style.display = 'block';
+        }
+
+        // Initialize or update rotation immediately
+        if (!window.HeadRotation || !HeadRotation.elements.container) {
+            HeadRotation.init('rotation-container');
+        } else {
+            // Update image immediately when projection changes
             HeadRotation.updateImage();
         }
 
+        // Update percentages
         this.updateSimulator();
     },
 

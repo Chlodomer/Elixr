@@ -118,8 +118,8 @@ const HeadRotation = {
 
         // Update angle based on drag distance
         const angleChange = (deltaX / ROTATION_CONFIG.dragSensitivity) *
-                           ROTATION_CONFIG.angleStep *
-                           ROTATION_CONFIG.rotationDirection;
+            ROTATION_CONFIG.angleStep *
+            ROTATION_CONFIG.rotationDirection;
 
         this.state.currentAngle += angleChange;
         this.state.lastX = e.clientX;
@@ -180,8 +180,8 @@ const HeadRotation = {
         this.state.velocity = deltaX;
 
         const angleChange = (deltaX / ROTATION_CONFIG.dragSensitivity) *
-                           ROTATION_CONFIG.angleStep *
-                           ROTATION_CONFIG.rotationDirection;
+            ROTATION_CONFIG.angleStep *
+            ROTATION_CONFIG.rotationDirection;
 
         this.state.currentAngle += angleChange;
         this.state.lastX = touch.clientX;
@@ -222,127 +222,108 @@ const HeadRotation = {
             return;
         }
 
-        // Check if we should use comparison slider
-        console.log('[Rotation] Checking comparison mode:', {
-            hasComparisonSlider: !!window.ComparisonSlider,
-            ethnicity: app.state.ethnicity,
-            hairType: app.state.hairType,
-            projectionYears: app.state.projectionYears,
-            age: app.state.age
-        });
+        // CLEAN IMPLEMENTATION:
+        // 0 years (Now) -> dark images
+        // 10 years -> silver images
+        // 20 years -> white images
+        // No comparison slider
 
-        const useComparison = window.ComparisonSlider &&
-                              ComparisonSlider.shouldShowComparison(app.state.ethnicity, app.state.hairType);
+        // Hide comparison slider
+        if (window.ComparisonSlider) {
+            ComparisonSlider.hide();
+        }
+        this.elements.image.style.display = 'block';
 
-        console.log('[Rotation] useComparison =', useComparison, 'projectionYears =', app.state.projectionYears);
+        // Determine folder based on projection years
+        let folderName = '40yo%20caucasian%20dark'; // Default: Now (0 years)
+        if (app.state.projectionYears === 10) {
+            folderName = '40yo%20caucasian%20silver';
+        } else if (app.state.projectionYears === 20) {
+            folderName = '40yo%20caucasian%20white';
+        }
 
-        if (useComparison) {
-            // Hide regular image, show comparison slider
-            this.elements.image.style.display = 'none';
-            ComparisonSlider.show();
-            ComparisonSlider.updateImages(this.state.currentAngleIndex);
-        } else {
-            // Show regular image, hide comparison slider
-            this.elements.image.style.display = 'block';
-            if (window.ComparisonSlider) {
-                ComparisonSlider.hide();
-            }
+        // Try to load the image at the current angle
+        this.tryLoadImageAtAngle(folderName, this.state.currentAngleIndex, 0);
+    },
 
-            // Calculate current gray percentage
-            const params = {
-                ethnicity: app.state.ethnicity,
-                age: app.state.age,
-                projectionYears: app.state.projectionYears,
-                ...app.state.parameters
-            };
+    /**
+     * Try to load an image at a specific angle, skip to next if not found
+     */
+    tryLoadImageAtAngle(folderName, angleIndex, attempts) {
+        // Prevent infinite loop - max 24 attempts (full circle)
+        if (attempts >= ROTATION_CONFIG.totalAngles) {
+            console.error('[Rotation] No images found in folder:', folderName);
+            return;
+        }
 
-            const result = Calculator.calculateGrayPercentage(params);
-            // If using Elixr and it's N/A, fall back to without Elixr value
-            let displayPercent = app.state.usingElixr ? result.withElixr : result.withoutElixr;
-            if (displayPercent === 'N/A') {
-                displayPercent = result.withoutElixr;
-            }
+        const angle = angleIndex * ROTATION_CONFIG.angleStep;
+        const imagePath = `${folderName}/${angle}.png`;
 
-            console.log('[Rotation] Updating image:', {
-                ethnicity: app.state.ethnicity,
-                hairType: app.state.hairType,
-                gender: this.state.gender,
-                angleIndex: this.state.currentAngleIndex,
-                grayPercent: displayPercent
-            });
+        console.log(`[Rotation] Trying: ${app.state.projectionYears}yr → ${angle}.png (attempt ${attempts + 1})`);
 
-            // Get image path
-            const imagePath = ROTATION_CONFIG.getImagePath(
-                app.state.ethnicity,
-                app.state.hairType,
-                this.state.gender,
-                this.state.currentAngleIndex,
-                displayPercent
-            );
+        // Create a temporary image to test if it loads
+        const testImg = new Image();
 
-            console.log('[Rotation] Loading image:', imagePath);
-
-            // Update image
+        testImg.onload = () => {
+            // Image loaded successfully, display it
             this.elements.image.src = imagePath;
-            this.elements.image.alt = `${CONFIG.ethnicities[app.state.ethnicity].name} ${this.state.gender} - ${displayPercent}% gray - ${this.state.currentAngleIndex * ROTATION_CONFIG.angleStep}° view`;
+            this.elements.image.alt = `Projection ${app.state.projectionYears} years - ${angle}° view`;
 
-            // Handle image error (show placeholder)
-            this.elements.image.onerror = () => {
-                console.error('[Rotation] Failed to load image:', imagePath);
-                console.log('[Rotation] Showing placeholder instead');
-                this.elements.image.src = this.createPlaceholder(
-                    this.state.currentAngleIndex,
-                    displayPercent
-                );
-            };
+            // Update angle display
+            const angleDisplay = document.getElementById('rotation-angle-display');
+            if (angleDisplay) {
+                angleDisplay.textContent = `${angle}°`;
+            }
+        };
 
-            // Log successful image load
-            this.elements.image.onload = () => {
-                console.log('[Rotation] Image loaded successfully');
-            };
-        }
+        testImg.onerror = () => {
+            // Image failed to load, try next angle
+            console.log(`[Rotation] Missing: ${angle}.png, trying next...`);
+            const nextAngleIndex = (angleIndex + 1) % ROTATION_CONFIG.totalAngles;
+            this.tryLoadImageAtAngle(folderName, nextAngleIndex, attempts + 1);
+        };
 
-        // Update angle display (common for both modes)
-        const angleDisplay = document.getElementById('rotation-angle-display');
-        if (angleDisplay) {
-            const displayAngle = this.state.currentAngleIndex * ROTATION_CONFIG.angleStep;
-            angleDisplay.textContent = `${displayAngle}°`;
-        }
+        testImg.src = imagePath;
     },
 
     /**
      * Create a placeholder image for missing images
      */
-    createPlaceholder(angleIndex, grayPercent) {
+    createPlaceholder(angleIndex, projectionYears) {
         const angle = angleIndex * ROTATION_CONFIG.angleStep;
+
+        // Determine stage label
+        let stage = 'Dark Hair';
+        if (projectionYears === 10) stage = 'Silver Hair';
+        else if (projectionYears === 20) stage = 'White Hair';
 
         const svg = `
             <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
-                <rect width="600" height="600" fill="${ROTATION_CONFIG.images.placeholderColor}"/>
+                <rect width="600" height="600" fill="#2a2a2a"/>
 
                 <!-- Angle indicator circle -->
-                <circle cx="300" cy="300" r="200" fill="none" stroke="#cbd5e0" stroke-width="2" stroke-dasharray="5,5"/>
+                <circle cx="300" cy="300" r="200" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="5,5"/>
 
                 <!-- Rotation direction arrow -->
-                <line x1="300" y1="300" x2="${300 + 180 * Math.cos(angle * Math.PI / 180)}" y2="${300 + 180 * Math.sin(angle * Math.PI / 180)}" stroke="#4a5568" stroke-width="3"/>
-                <circle cx="${300 + 180 * Math.cos(angle * Math.PI / 180)}" cy="${300 + 180 * Math.sin(angle * Math.PI / 180)}" r="8" fill="#4a5568"/>
+                <line x1="300" y1="300" x2="${300 + 180 * Math.cos(angle * Math.PI / 180)}" y2="${300 + 180 * Math.sin(angle * Math.PI / 180)}" stroke="#6a7a8a" stroke-width="3"/>
+                <circle cx="${300 + 180 * Math.cos(angle * Math.PI / 180)}" cy="${300 + 180 * Math.sin(angle * Math.PI / 180)}" r="8" fill="#6a7a8a"/>
 
                 <!-- Central info -->
-                <text x="300" y="280" text-anchor="middle" font-family="Arial" font-size="48" fill="#2d3748" font-weight="bold">
+                <text x="300" y="270" text-anchor="middle" font-family="Arial" font-size="48" fill="#e0e0e0" font-weight="bold">
                     ${angle}°
                 </text>
-                <text x="300" y="320" text-anchor="middle" font-family="Arial" font-size="24" fill="#4a5568">
-                    ${grayPercent}% Gray
+                <text x="300" y="310" text-anchor="middle" font-family="Arial" font-size="24" fill="#b0b0b0">
+                    ${projectionYears} Years
                 </text>
-                <text x="300" y="355" text-anchor="middle" font-family="Arial" font-size="18" fill="#718096">
-                    ${CONFIG.ethnicities[app.state.ethnicity]?.name || 'Unknown'}
+                <text x="300" y="345" text-anchor="middle" font-family="Arial" font-size="20" fill="#8a9aa0">
+                    ${stage}
                 </text>
-                <text x="300" y="385" text-anchor="middle" font-family="Arial" font-size="18" fill="#718096">
-                    ${CONFIG.hairTypes[app.state.hairType] || 'Unknown'} - ${this.state.gender}
+                <text x="300" y="380" text-anchor="middle" font-family="Arial" font-size="16" fill="#6a7a8a">
+                    Image not found
                 </text>
 
                 <!-- Instruction -->
-                <text x="300" y="520" text-anchor="middle" font-family="Arial" font-size="16" fill="#a0aec0">
+                <text x="300" y="520" text-anchor="middle" font-family="Arial" font-size="16" fill="#6a7a8a">
                     Drag to rotate
                 </text>
             </svg>
@@ -432,8 +413,8 @@ const HeadRotation = {
             // Apply momentum decay
             else if (!this.state.isDragging && Math.abs(this.state.velocity) > 0.1) {
                 const angleChange = (this.state.velocity / ROTATION_CONFIG.dragSensitivity) *
-                                   ROTATION_CONFIG.angleStep *
-                                   ROTATION_CONFIG.rotationDirection;
+                    ROTATION_CONFIG.angleStep *
+                    ROTATION_CONFIG.rotationDirection;
 
                 this.state.currentAngle += angleChange;
                 this.state.velocity *= ROTATION_CONFIG.momentumFriction;

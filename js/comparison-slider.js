@@ -200,8 +200,9 @@ const ComparisonSlider = {
         });
 
         const shouldShow = ethnicity === 'caucasian' &&
-                          hairType === 'straight-short' &&
-                          (projectionYears === 10 || projectionYears === 20);
+            hairType === 'straight-short' &&
+            (projectionYears === 10 || projectionYears === 20);
+
         console.log('[ComparisonSlider] shouldShowComparison:', {
             ethnicity,
             hairType,
@@ -249,14 +250,24 @@ const ComparisonSlider = {
         const projectionYears = app.state.projectionYears;
 
         if (projectionYears === 10) {
-            // 10 years projection (age 40): dark vs silver
-            beforePath = `40yo caucasian dark/${angle}.png`;
-            afterPath = `40yo caucasian silver/${angle}.png`;
+            // 10 years projection: Dark (Now) vs Silver (10y)
+            beforePath = `40yo%20caucasian%20dark/${angle}.png`;
+            afterPath = `40yo%20caucasian%20silver/${angle}.png`;
         } else if (projectionYears === 20) {
-            // 20 years projection (age 50): white vs silver
-            beforePath = `40yo caucasian white/${angle}.png`;
-            afterPath = `40yo caucasian silver/${angle}.png`;
+            // 20 years projection: Silver (With Elixr) vs White (Without Elixr)
+            beforePath = `40yo%20caucasian%20silver/${angle}.png`;
+            afterPath = `40yo%20caucasian%20white/${angle}.png`;
+        } else {
+            // Fallback or error case
+            console.warn('[ComparisonSlider] Unexpected projection years for comparison:', projectionYears);
+            return;
         }
+
+        const debugLog = (msg) => {
+            const el = document.getElementById('debug-overlay');
+            if (el) el.innerHTML += `<div>${msg}</div>`;
+        };
+        debugLog(`[Slider] Update: Before=${beforePath}, After=${afterPath}`);
 
         console.log('[ComparisonSlider] Updating images:', {
             angleIndex: angleIndex,

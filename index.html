@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elixr Hair Whitening Simulator</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen active">
@@ -40,17 +42,12 @@
             </ul>
 
             <div class="age-input-group" style="margin-top: 2rem;">
-                <label for="current-age-input" style="display: block; font-size: 1.125rem; color: #4a4a4a; margin-bottom: 1rem; font-weight: 400;">
+                <label for="current-age-input"
+                    style="display: block; font-size: 1.125rem; color: #4a4a4a; margin-bottom: 1rem; font-weight: 400;">
                     What is your current age?
                 </label>
-                <input
-                    type="number"
-                    id="current-age-input"
-                    min="20"
-                    max="80"
-                    value="30"
-                    style="width: 120px; padding: 0.75rem; font-size: 1.25rem; text-align: center; border: 2px solid #d0d0d0; border-radius: 6px; font-weight: 500;"
-                >
+                <input type="number" id="current-age-input" min="20" max="80" value="30"
+                    style="width: 120px; padding: 0.75rem; font-size: 1.25rem; text-align: center; border: 2px solid #d0d0d0; border-radius: 6px; font-weight: 500;">
                 <span style="margin-left: 0.5rem; color: #666;">years</span>
             </div>
 
@@ -109,13 +106,15 @@
                 </div>
                 <div class="option-card" onclick="app.selectHairType('curly-short')">
                     <div class="option-icon-hair">
-                        <img src="hair icons/curl1.png" alt="Curly Short Hair" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; mix-blend-mode: multiply; opacity: 0.9;">
+                        <img src="hair icons/curl1.png" alt="Curly Short Hair"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; mix-blend-mode: multiply; opacity: 0.9;">
                     </div>
                     <h3>Curly Short</h3>
                 </div>
                 <div class="option-card" onclick="app.selectHairType('curly-long')">
                     <div class="option-icon-hair">
-                        <img src="hair icons/curl2.png" alt="Curly Long Hair" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; mix-blend-mode: multiply; opacity: 0.9;">
+                        <img src="hair icons/curl2.png" alt="Curly Long Hair"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; mix-blend-mode: multiply; opacity: 0.9;">
                     </div>
                     <h3>Curly Long</h3>
                 </div>
@@ -165,15 +164,8 @@
                 <label>
                     Stress Level: <span id="stress-value-onboarding">Minimal</span>
                 </label>
-                <input
-                    type="range"
-                    id="stress-slider-onboarding"
-                    min="0"
-                    max="2"
-                    step="1"
-                    value="0"
-                    oninput="app.updateOnboardingParameter('stress', this.value)"
-                >
+                <input type="range" id="stress-slider-onboarding" min="0" max="2" step="1" value="0"
+                    oninput="app.updateOnboardingParameter('stress', this.value)">
                 <div class="slider-labels">
                     <span>Minimal</span>
                     <span>Moderate</span>
@@ -185,15 +177,8 @@
                 <label>
                     Sun Exposure: <span id="sun-value-onboarding">Minimal</span>
                 </label>
-                <input
-                    type="range"
-                    id="sun-slider-onboarding"
-                    min="0"
-                    max="2"
-                    step="1"
-                    value="0"
-                    oninput="app.updateOnboardingParameter('sun', this.value)"
-                >
+                <input type="range" id="sun-slider-onboarding" min="0" max="2" step="1" value="0"
+                    oninput="app.updateOnboardingParameter('sun', this.value)">
                 <div class="slider-labels">
                     <span>Minimal</span>
                     <span>Moderate</span>
@@ -219,25 +204,13 @@
             <div class="control-group" style="margin-top: 2rem;">
                 <label>Work Environment:</label>
                 <div class="work-buttons">
-                    <button
-                        class="work-btn active"
-                        data-value="0"
-                        onclick="app.updateOnboardingWork(0)"
-                    >
+                    <button class="work-btn active" data-value="0" onclick="app.updateOnboardingWork(0)">
                         Indoor / Office
                     </button>
-                    <button
-                        class="work-btn"
-                        data-value="1"
-                        onclick="app.updateOnboardingWork(1)"
-                    >
+                    <button class="work-btn" data-value="1" onclick="app.updateOnboardingWork(1)">
                         Outdoor
                     </button>
-                    <button
-                        class="work-btn"
-                        data-value="2"
-                        onclick="app.updateOnboardingWork(2)"
-                    >
+                    <button class="work-btn" data-value="2" onclick="app.updateOnboardingWork(2)">
                         Chemical Exposure
                     </button>
                 </div>
@@ -245,22 +218,16 @@
 
             <div class="control-group checkbox-group" style="margin-top: 2rem;">
                 <label>
-                    <input
-                        type="checkbox"
-                        id="smoking-check-onboarding"
-                        onchange="app.updateOnboardingCheckbox('smoking', this.checked)"
-                    >
+                    <input type="checkbox" id="smoking-check-onboarding"
+                        onchange="app.updateOnboardingCheckbox('smoking', this.checked)">
                     Smoking
                 </label>
             </div>
 
             <div class="control-group checkbox-group">
                 <label>
-                    <input
-                        type="checkbox"
-                        id="dyeing-check-onboarding"
-                        onchange="app.updateOnboardingCheckbox('dyeing', this.checked)"
-                    >
+                    <input type="checkbox" id="dyeing-check-onboarding"
+                        onchange="app.updateOnboardingCheckbox('dyeing', this.checked)">
                     Regular Hair Dyeing
                 </label>
             </div>
@@ -289,7 +256,8 @@
                 <!-- Left: Avatar Display -->
                 <div class="avatar-section">
                     <div class="view-tabs">
-                        <button class="view-tab active single-tab" data-view="rotate" onclick="HeadRotation.toggleAutoRotate()">
+                        <button class="view-tab active single-tab" data-view="rotate"
+                            onclick="HeadRotation.toggleAutoRotate()">
                             360° Rotate
                         </button>
                     </div>
@@ -301,22 +269,27 @@
                             <img id="rotation-image" src="" alt="Rotating Avatar" style="display: block;">
 
                             <!-- Comparison slider view -->
-                            <div id="comparison-slider-container" class="comparison-slider-container" style="display: none;">
+                            <div id="comparison-slider-container" class="comparison-slider-container"
+                                style="display: none;">
                                 <div class="comparison-slider">
                                     <div class="comparison-image-wrapper">
-                                        <img id="comparison-before-image" class="comparison-image" src="" alt="With Elixr">
+                                        <img id="comparison-before-image" class="comparison-image" src=""
+                                            alt="With Elixr">
                                         <div class="comparison-label comparison-label-before">With Elixr</div>
                                     </div>
-                                    <div class="comparison-image-wrapper comparison-after" id="comparison-after-wrapper">
-                                        <img id="comparison-after-image" class="comparison-image" src="" alt="Without Elixr">
+                                    <div class="comparison-image-wrapper comparison-after"
+                                        id="comparison-after-wrapper">
+                                        <img id="comparison-after-image" class="comparison-image" src=""
+                                            alt="Without Elixr">
                                         <div class="comparison-label comparison-label-after">Without Elixr</div>
                                     </div>
                                     <div class="comparison-slider-handle" id="comparison-slider-handle">
                                         <div class="comparison-slider-line"></div>
                                         <div class="comparison-slider-button">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                                <path d="M15 18l-6-6 6-6"/>
-                                                <path d="M9 18l6-6-6-6"/>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white"
+                                                stroke-width="2">
+                                                <path d="M15 18l-6-6 6-6" />
+                                                <path d="M9 18l6-6-6-6" />
                                             </svg>
                                         </div>
                                     </div>
@@ -324,8 +297,10 @@
                             </div>
 
                             <div class="rotation-instructions">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
                                 </svg>
                                 <span>Drag to rotate</span>
                             </div>
@@ -362,32 +337,16 @@
                             Current Age: <span id="current-age-display-label" style="font-weight: 500;">30</span> years
                         </p>
                         <div class="time-projection-buttons">
-                            <button
-                                class="projection-btn active"
-                                data-years="0"
-                                onclick="app.updateProjection(0)"
-                            >
+                            <button class="projection-btn active" data-years="0" onclick="app.updateProjection(0)">
                                 Now
                             </button>
-                            <button
-                                class="projection-btn"
-                                data-years="5"
-                                onclick="app.updateProjection(5)"
-                            >
+                            <button class="projection-btn" data-years="5" onclick="app.updateProjection(5)">
                                 In 5 Years
                             </button>
-                            <button
-                                class="projection-btn"
-                                data-years="10"
-                                onclick="app.updateProjection(10)"
-                            >
+                            <button class="projection-btn" data-years="10" onclick="app.updateProjection(10)">
                                 In 10 Years
                             </button>
-                            <button
-                                class="projection-btn"
-                                data-years="20"
-                                onclick="app.updateProjection(20)"
-                            >
+                            <button class="projection-btn" data-years="20" onclick="app.updateProjection(20)">
                                 In 20 Years
                             </button>
                         </div>
@@ -415,6 +374,19 @@
         </div>
     </div>
 
+    <!-- Debug Overlay -->
+    <div id="debug-overlay"
+        style="position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.8); color: lime; font-family: monospace; padding: 10px; z-index: 9999; pointer-events: none; max-height: 200px; overflow: auto;">
+        Debug Log...
+    </div>
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            const el = document.getElementById('debug-overlay');
+            if (el) el.innerHTML += `<div style="color: red;">ERROR: ${msg} at ${line}:${col}</div>`;
+            return false;
+        };
+    </script>
+
     <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/calculator.js"></script>
@@ -424,4 +396,5 @@
     <script src="js/rotation.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
