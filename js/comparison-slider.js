@@ -184,6 +184,12 @@ const ComparisonSlider = {
         if (!this.elements.container || !this.elements.beforeImage || !this.elements.afterImage) {
             console.error('[ComparisonSlider] Elements not initialized! Calling init()...');
             this.init();
+
+            // After init, verify elements were found
+            if (!this.elements.beforeImage || !this.elements.afterImage) {
+                console.error('[ComparisonSlider] Failed to initialize elements!');
+                return;
+            }
         }
 
         this.state.isActive = true;
