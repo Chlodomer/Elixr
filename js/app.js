@@ -197,6 +197,7 @@ const app = {
                 ethnicity: this.state.ethnicity,
                 age: this.state.age,
                 projectionYears: this.state.projectionYears,
+                gender: this.state.gender,
                 ...this.state.parameters
             };
             const result = Calculator.calculateGrayPercentage(params);
@@ -219,6 +220,7 @@ const app = {
             ethnicity: this.state.ethnicity,
             age: this.state.age,
             projectionYears: this.state.projectionYears,
+            gender: this.state.gender,
             ...this.state.parameters
         };
 
@@ -254,6 +256,7 @@ const app = {
         const params = {
             ethnicity: this.state.ethnicity,
             age: this.state.age,
+            gender: this.state.gender,
             ...this.state.parameters
         };
 
@@ -461,6 +464,7 @@ const app = {
             ethnicity: this.state.ethnicity,
             age: this.state.age,
             projectionYears: this.state.projectionYears,
+            gender: this.state.gender,
             ...this.state.parameters
         };
 

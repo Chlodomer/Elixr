@@ -1,129 +1,169 @@
-// Hair Whitening Calculator
+// Hair Whitening Calculator - CSV Data Lookup Version
 
 const Calculator = {
     /**
+     * Map app ethnicity to CSV ethnicity
+     */
+    _mapEthnicity(appEthnicity) {
+        const mapping = {
+            'caucasian': 'Caucasian',
+            'african-american': 'African_American',
+            'middle-eastern': 'East_Asian' // Using East_Asian for Middle Eastern
+        };
+        return mapping[appEthnicity] || 'Caucasian';
+    },
+
+    /**
+     * Map numeric level (0-2) to CSV level string
+     */
+    _mapLevel(numericLevel) {
+        const levels = ['low', 'moderate', 'high'];
+        const level = Math.min(2, Math.max(0, Math.floor(numericLevel)));
+        return levels[level];
+    },
+
+    /**
+     * Map boolean to CSV string
+     */
+    _mapBoolean(value, trueStr, falseStr) {
+        return value ? trueStr : falseStr;
+    },
+
+    /**
      * Calculate gray hair percentage based on parameters
      * @param {Object} params - Calculation parameters
-     * @param {string} params.ethnicity - Selected ethnicity
+     * @param {string} params.ethnicity - Selected ethnicity (caucasian, african-american, middle-eastern)
      * @param {number} params.age - Current age
      * @param {number} params.projectionYears - Years into the future (0, 5, 10, 20)
-     * @param {number} params.stress - Stress level (0-2)
-     * @param {number} params.sun - Sun exposure (0-2)
+     * @param {number} params.stress - Stress level (0-2: minimal, moderate, extreme)
+     * @param {number} params.sun - Sun exposure (0-2: minimal, moderate, extreme)
      * @param {number} params.work - Work environment (0-2)
      * @param {boolean} params.smoking - Is smoking
      * @param {boolean} params.dyeing - Is dyeing hair
      * @param {boolean} params.usingElixr - Is using Elixr
+     * @param {string} [params.gender] - UI gender selection (male, female, etc.)
      * @returns {Object} - { withoutElixr: number, withElixr: number | string }
      */
     calculateGrayPercentage(params) {
-        const ethnicity = CONFIG.ethnicities[params.ethnicity];
-
-        // Base calculation without Elixr
-        const baseGray = this._calculateBase(ethnicity, params);
-
-        // Calculation with Elixr
-        // Treatment needs time to work - only show results after 6 months (0.5 years)
+        // Calculate projected age
         const projectionYears = params.projectionYears || 0;
-        let withElixr;
+        const projectedAge = Math.round(params.age + projectionYears);
 
+        // Map app parameters to CSV format
+        const csvEthnicity = this._mapEthnicity(params.ethnicity);
+
+        // For stress and sun, we'll use the higher of the two as UV level
+        // and stress level separately
+        const stressLevel = this._mapLevel(params.stress);
+
+        // For UV, combine sun exposure and work environment
+        // Work: 0=indoor, 1=outdoor, 2=chemical
+        let uvNumeric = params.sun;
+        if (params.work === 1) uvNumeric = Math.max(uvNumeric, 1); // Outdoor work
+        if (params.work === 2) uvNumeric = Math.max(uvNumeric, 1.5); // Chemical exposure
+        const uvLevel = this._mapLevel(uvNumeric);
+
+        const smoking = this._mapBoolean(params.smoking, 'smoking', 'no_smoking');
+
+        // Map UI gender to CSV sex (default to male for non-binary / unspecified)
+        const sex = params.gender === 'female' ? 'female' : 'male';
+
+        // Lookup gray percentage without Elixr
+        const withoutElixr = this._lookupGrayPercent(
+            csvEthnicity,
+            projectedAge,
+            smoking,
+            uvLevel,
+            stressLevel,
+            'no',
+            sex
+        );
+
+        // Lookup gray percentage with Elixr
+        // Treatment needs time to work - only show results after 6 months
+        let withElixr;
         if (projectionYears < 0.5) {
-            // Not enough time for treatment to show results
             withElixr = 'N/A';
         } else {
-            withElixr = this._applyElixrEffect(baseGray, params.age, ethnicity.startAge);
-            withElixr = Math.min(100, Math.max(0, Math.round(withElixr)));
+            withElixr = this._lookupGrayPercent(
+                csvEthnicity,
+                projectedAge,
+                smoking,
+                uvLevel,
+                stressLevel,
+                'yes',
+                sex
+            );
         }
 
         return {
-            withoutElixr: Math.min(100, Math.max(0, Math.round(baseGray))),
+            withoutElixr: withoutElixr,
             withElixr: withElixr
         };
     },
 
     /**
-     * Calculate base gray percentage without Elixr
-     * Uses research-based multiplicative model:
-     * - Age shifts from lifestyle factors (advancing effective age)
-     * - Multipliers applied to graying rate
-     * - Based on peer-reviewed hair whitening studies (see app_data.md)
+     * Look up gray percentage from CSV data
      */
-    _calculateBase(ethnicity, params) {
-        // Step 1: Calculate total age shift from all factors
-        // Each factor can "advance" the biological age of hair
-        let totalAgeShift = 0;
+    _lookupGrayPercent(ethnicity, age, smoking, uvLevel, stressLevel, elixrUse, sex = 'male') {
+        // Clamp age to available range (20-80)
+        age = Math.min(80, Math.max(20, age));
 
-        // v2.0: Stress age shift (discrete: 0=minimal, 1=moderate, 2=extreme)
-        const stressLevel = Math.min(2, Math.max(0, Math.floor(params.stress)));
-        const stressShift = CONFIG.factors.stress.ageShifts[stressLevel];
-        totalAgeShift += stressShift;
+        try {
+            // Select appropriate dataset (fallback to male/default if female data not available)
+            let dataSource;
+            if (sex === 'female' && typeof HAIR_WHITENING_DATA_FEMALE !== 'undefined') {
+                dataSource = HAIR_WHITENING_DATA_FEMALE;
+            } else if (typeof HAIR_WHITENING_DATA_MALE !== 'undefined') {
+                dataSource = HAIR_WHITENING_DATA_MALE;
+            } else {
+                dataSource = HAIR_WHITENING_DATA;
+            }
 
-        // v2.0: Sun/UV age shift (discrete: 0=minimal, 1=moderate, 2=extreme)
-        const sunLevel = Math.min(2, Math.max(0, Math.floor(params.sun)));
-        const sunShift = CONFIG.factors.sun.ageShifts[sunLevel];
-        totalAgeShift += sunShift;
+            // Navigate the nested data structure
+            const ethnicityData = dataSource[ethnicity];
+            if (!ethnicityData) {
+                console.warn(`Ethnicity not found: ${ethnicity}`);
+                return 0;
+            }
 
-        // Work environment age shift
-        totalAgeShift += CONFIG.factors.work[params.work].ageShift;
+            const ageData = ethnicityData[age];
+            if (!ageData) {
+                console.warn(`Age not found: ${age} for ${ethnicity}`);
+                return 0;
+            }
 
-        // Smoking age shift
-        if (params.smoking) {
-            totalAgeShift += CONFIG.factors.smoking.ageShift;
+            const smokingData = ageData[smoking];
+            if (!smokingData) {
+                console.warn(`Smoking data not found: ${smoking}`);
+                return 0;
+            }
+
+            const uvData = smokingData[uvLevel];
+            if (!uvData) {
+                console.warn(`UV level not found: ${uvLevel}`);
+                return 0;
+            }
+
+            const stressData = uvData[stressLevel];
+            if (!stressData) {
+                console.warn(`Stress level not found: ${stressLevel}`);
+                return 0;
+            }
+
+            const grayPercent = stressData[elixrUse];
+            if (grayPercent === undefined) {
+                console.warn(`Elixr data not found: ${elixrUse}`);
+                return 0;
+            }
+
+            return grayPercent;
+        } catch (error) {
+            console.error('Lookup error:', error, {
+                ethnicity, age, smoking, uvLevel, stressLevel, elixrUse, sex
+            });
+            return 0;
         }
-
-        // Step 2: Calculate effective age (biological age for hair)
-        const effectiveAge = params.age + totalAgeShift;
-        const yearsSinceStart = Math.max(0, effectiveAge - ethnicity.startAge);
-
-        // Step 3: Base graying rate (intrinsic aging)
-        // Research shows ~1.2-1.5% gray per year after onset for Caucasians
-        // This is the baseline before multipliers
-        const baseGrayingRate = 1.3; // % per year
-        let baseGray = yearsSinceStart * baseGrayingRate;
-
-        // Step 4: Apply lifestyle multipliers
-        // v2.0: These multiply the base graying rate (research-based from app_data.md)
-        let totalMultiplier = 1.0;
-
-        // v2.0: Stress multiplier (discrete levels: 0=minimal, 1=moderate, 2=extreme)
-        const stressMultiplier = CONFIG.factors.stress.multipliers[stressLevel];
-        totalMultiplier *= stressMultiplier;
-
-        // v2.0: Sun/UV multiplier (discrete levels: 0=minimal, 1=moderate, 2=extreme)
-        const sunMultiplier = CONFIG.factors.sun.multipliers[sunLevel];
-        totalMultiplier *= sunMultiplier;
-
-        // Work environment multiplier
-        totalMultiplier *= CONFIG.factors.work[params.work].multiplier;
-
-        // Smoking multiplier (2.2x if smoking)
-        if (params.smoking) {
-            totalMultiplier *= CONFIG.factors.smoking.multiplier;
-        }
-
-        // Step 5: Apply multiplier to base gray
-        const adjustedGray = baseGray * totalMultiplier;
-
-        // Step 6: Apply ethnicity base rate
-        // Different ethnicities have different overall graying rates
-        const totalGray = adjustedGray * ethnicity.baseRate;
-
-        return totalGray;
-    },
-
-    /**
-     * Apply Elixr treatment effects
-     */
-    _applyElixrEffect(baseGray, currentAge, startAge) {
-        // Elixr slows new whitening
-        const slowedGray = baseGray * (1 - CONFIG.elixr.slowingFactor);
-
-        // Elixr can reverse some existing gray
-        const reversalAmount = Math.min(baseGray * 0.18, CONFIG.elixr.reversalPercent);
-
-        // Combined effect
-        const withElixr = slowedGray - reversalAmount;
-
-        return Math.max(0, withElixr);
     },
 
     /**

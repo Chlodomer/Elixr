@@ -78,6 +78,7 @@ const ImagePreloader = {
             ethnicity: app.state.ethnicity,
             age: app.state.age,
             projectionYears: app.state.projectionYears,
+            gender: app.state.gender,
             ...app.state.parameters
         };
 
